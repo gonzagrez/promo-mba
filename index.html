@@ -3,9 +3,43 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#7c3aed" />
+    <meta name="theme-color" content="#1e3a6b" />
     <title>Promoción MBA 2024 ESE</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // ===== Colores institucionales (ajústalos aquí si tienes los hex exactos del ESE) =====
+      // "ese" = azul marino (color principal) · "oro" = dorado (acento)
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ese: {
+                50:  "#eef2f8",
+                100: "#d5e0ef",
+                200: "#adc0df",
+                300: "#7f9bc7",
+                400: "#5175a8",
+                500: "#305488",
+                600: "#1e3a6b",
+                700: "#172d54",
+                800: "#11223f",
+                900: "#0b1730"
+              },
+              oro: {
+                50:  "#faf6ea",
+                100: "#f2e8c9",
+                200: "#e6d296",
+                300: "#d9bd63",
+                400: "#cba135",
+                500: "#b4892a",
+                600: "#977123",
+                700: "#7c5c1d"
+              }
+            }
+          }
+        }
+      };
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -16,12 +16,12 @@ const MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "o
 const MESES_LARGO = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
 const CATEGORIAS = {
-  junta: { emoji: "🎉", label: "Junta / Fiesta", grad: "from-fuchsia-500 to-violet-600" },
+  junta: { emoji: "🎉", label: "Junta / Fiesta", grad: "from-oro-500 to-ese-600" },
   comida: { emoji: "🍽️", label: "Comida / Cena", grad: "from-orange-400 to-rose-500" },
   deporte: { emoji: "⛳", label: "Deporte", grad: "from-emerald-400 to-teal-600" },
   viaje: { emoji: "✈️", label: "Viaje", grad: "from-cyan-400 to-blue-600" },
   networking: { emoji: "💼", label: "Networking", grad: "from-slate-500 to-slate-700" },
-  otro: { emoji: "📌", label: "Otro", grad: "from-violet-500 to-indigo-600" },
+  otro: { emoji: "📌", label: "Otro", grad: "from-ese-500 to-indigo-600" },
 };
 const catDe = c => CATEGORIAS[c] || CATEGORIAS.otro;
 const uid = () => Math.random().toString(36).slice(2, 10);
@@ -217,7 +217,7 @@ function descargarJSON(obj, nombre) {
 }
 
 /* ============================ Base ============================ */
-const PALETA = ["bg-violet-100 text-violet-700", "bg-fuchsia-100 text-fuchsia-700", "bg-amber-100 text-amber-700", "bg-emerald-100 text-emerald-700", "bg-cyan-100 text-cyan-700", "bg-rose-100 text-rose-700", "bg-indigo-100 text-indigo-700", "bg-orange-100 text-orange-700"];
+const PALETA = ["bg-ese-100 text-ese-700", "bg-oro-100 text-oro-700", "bg-amber-100 text-amber-700", "bg-emerald-100 text-emerald-700", "bg-cyan-100 text-cyan-700", "bg-rose-100 text-rose-700", "bg-indigo-100 text-indigo-700", "bg-orange-100 text-orange-700"];
 function tonoDe(nombre) { let h = 0; for (let i = 0; i < (nombre || "").length; i++) h = (h * 31 + nombre.charCodeAt(i)) % 997; return PALETA[h % PALETA.length]; }
 function Avatar({ nombre, size = 40 }) {
   const ini = (nombre || "?").split(" ").filter(Boolean).slice(0, 2).map(p => p[0]?.toUpperCase()).join("");
@@ -239,8 +239,8 @@ function Modal({ children, onClose, titulo }) {
 function Campo({ label, children }) {
   return <label className="block mb-3"><span className="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wide">{label}</span>{children}</label>;
 }
-const inputCls = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-violet-400";
-const btnPrim = "w-full bg-gradient-to-r from-violet-600 to-fuchsia-500 text-white rounded-xl py-2.5 text-sm font-bold shadow-md";
+const inputCls = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-ese-400 focus:border-ese-400";
+const btnPrim = "w-full bg-gradient-to-r from-ese-600 to-oro-500 text-white rounded-xl py-2.5 text-sm font-bold shadow-md";
 function Vacio({ emoji, texto }) {
   return <div className="bg-white rounded-3xl border-2 border-dashed border-slate-200 p-10 text-center"><p className="text-4xl mb-3">{emoji}</p><p className="text-sm text-slate-400 max-w-xs mx-auto">{texto}</p></div>;
 }
@@ -277,7 +277,7 @@ function MemberForm({ inicial, onSave, onClose }) {
       <div className="mt-3 mb-2 flex items-center gap-2 text-slate-700"><Heart size={15} className="text-rose-500" /><span className="text-sm font-semibold">Pareja</span></div>
       <Campo label="Nombre de la pareja"><input className={inputCls} value={cn} onChange={e => setCn(e.target.value)} placeholder="Opcional" /></Campo>
       {cn.trim() && <Campo label="🎂 Cumpleaños de la pareja"><input type="date" className={inputCls} value={cc} onChange={e => setCc(e.target.value)} /></Campo>}
-      <div className="mt-3 mb-2 flex items-center justify-between"><div className="flex items-center gap-2 text-slate-700"><Baby size={15} className="text-amber-500" /><span className="text-sm font-semibold">Hijos</span></div><button onClick={addH} className="text-xs text-violet-700 font-semibold flex items-center gap-1"><Plus size={13} /> Agregar</button></div>
+      <div className="mt-3 mb-2 flex items-center justify-between"><div className="flex items-center gap-2 text-slate-700"><Baby size={15} className="text-amber-500" /><span className="text-sm font-semibold">Hijos</span></div><button onClick={addH} className="text-xs text-ese-700 font-semibold flex items-center gap-1"><Plus size={13} /> Agregar</button></div>
       {hijos.map(h => (
         <div key={h.id} className="flex gap-2 mb-2 items-center">
           <input className={inputCls} value={h.nombre} onChange={e => setH(h.id, "nombre", e.target.value)} placeholder="Nombre" />
@@ -322,12 +322,12 @@ function EventForm({ inicial, onSave, onClose }) {
       <Campo label="Categoría">
         <div className="grid grid-cols-3 gap-2">
           {Object.entries(CATEGORIAS).map(([k, c]) => (
-            <button key={k} onClick={() => setCategoria(k)} className={`rounded-xl py-2 text-xs font-semibold border-2 flex flex-col items-center gap-0.5 ${categoria === k ? "border-violet-500 bg-violet-50 text-violet-700" : "border-slate-100 text-slate-500"}`}><span className="text-lg">{c.emoji}</span>{c.label}</button>
+            <button key={k} onClick={() => setCategoria(k)} className={`rounded-xl py-2 text-xs font-semibold border-2 flex flex-col items-center gap-0.5 ${categoria === k ? "border-ese-500 bg-ese-50 text-ese-700" : "border-slate-100 text-slate-500"}`}><span className="text-lg">{c.emoji}</span>{c.label}</button>
           ))}
         </div>
       </Campo>
       {!inicial && (
-        <button onClick={() => setVotar(!votar)} className={`mb-3 flex items-center gap-2 text-sm px-3 py-1.5 rounded-xl border-2 ${votar ? "border-violet-500 bg-violet-50 text-violet-700" : "border-slate-200 text-slate-500"}`}><Vote size={14} /> Proponer fechas para votar</button>
+        <button onClick={() => setVotar(!votar)} className={`mb-3 flex items-center gap-2 text-sm px-3 py-1.5 rounded-xl border-2 ${votar ? "border-ese-500 bg-ese-50 text-ese-700" : "border-slate-200 text-slate-500"}`}><Vote size={14} /> Proponer fechas para votar</button>
       )}
       {votar ? (
         <Campo label="🗳️ Opciones de fecha (la más votada gana)">
@@ -338,7 +338,7 @@ function EventForm({ inicial, onSave, onClose }) {
               <input type="time" className={inputCls + " max-w-[7rem]"} value={o.hora} onChange={e => setOpc(o.id, "hora", e.target.value)} />
             </div>
           ))}
-          <button onClick={() => setOpciones([...opciones, { id: uid(), fecha: "", hora: "" }])} className="text-xs text-violet-700 font-semibold flex items-center gap-1"><Plus size={13} /> Otra opción</button>
+          <button onClick={() => setOpciones([...opciones, { id: uid(), fecha: "", hora: "" }])} className="text-xs text-ese-700 font-semibold flex items-center gap-1"><Plus size={13} /> Otra opción</button>
         </Campo>
       ) : (
         <div className="flex gap-2">
@@ -350,12 +350,12 @@ function EventForm({ inicial, onSave, onClose }) {
       <Campo label="Descripción"><textarea className={inputCls} rows={2} value={desc} onChange={e => setDesc(e.target.value)} /></Campo>
       {!votar && (
         <div className="flex items-center gap-3 mb-3">
-          <button onClick={() => setRecurrente(!recurrente)} className={`flex items-center gap-2 text-sm px-3 py-1.5 rounded-xl border-2 ${recurrente ? "border-violet-500 bg-violet-50 text-violet-700" : "border-slate-200 text-slate-500"}`}><Repeat size={14} /> Recurrente</button>
+          <button onClick={() => setRecurrente(!recurrente)} className={`flex items-center gap-2 text-sm px-3 py-1.5 rounded-xl border-2 ${recurrente ? "border-ese-500 bg-ese-50 text-ese-700" : "border-slate-200 text-slate-500"}`}><Repeat size={14} /> Recurrente</button>
           {recurrente && <select className={inputCls + " max-w-[10rem]"} value={frecuencia} onChange={e => setFrecuencia(e.target.value)}><option value="semanal">Cada semana</option><option value="mensual">Cada mes</option><option value="anual">Cada año</option></select>}
         </div>
       )}
       <Campo label="💸 Cuota por persona (CLP)"><input type="number" className={inputCls} value={cuota} onChange={e => setCuota(e.target.value)} placeholder="0 si no aplica" /></Campo>
-      <div className="mt-1 mb-2 flex items-center justify-between"><div className="flex items-center gap-2 text-slate-700"><ShoppingBag size={15} className="text-emerald-600" /><span className="text-sm font-semibold">¿Qué llevar?</span></div><button onClick={() => setAportes([...aportes, { id: uid(), item: "", asignadoA: null }])} className="text-xs text-violet-700 font-semibold flex items-center gap-1"><Plus size={13} /> Agregar</button></div>
+      <div className="mt-1 mb-2 flex items-center justify-between"><div className="flex items-center gap-2 text-slate-700"><ShoppingBag size={15} className="text-emerald-600" /><span className="text-sm font-semibold">¿Qué llevar?</span></div><button onClick={() => setAportes([...aportes, { id: uid(), item: "", asignadoA: null }])} className="text-xs text-ese-700 font-semibold flex items-center gap-1"><Plus size={13} /> Agregar</button></div>
       {aportes.map(a => (
         <div key={a.id} className="flex gap-2 mb-2 items-center">
           <input className={inputCls} value={a.item} onChange={e => setAportes(aportes.map(x => x.id === a.id ? { ...x, item: e.target.value } : x))} placeholder="Ej: Carne, bebidas…" />
@@ -489,13 +489,13 @@ function Inicio({ members, events, meId, ahora, setTab, setEstado, setAnfitrion 
   return (
     <div className="space-y-6">
       {siguiente ? <HeroEvento ev={siguiente} ahora={ahora} meId={meId} members={members} setEstado={setEstado} setAnfitrion={setAnfitrion} /> :
-        <div className="rounded-3xl p-8 text-center bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white"><p className="text-4xl mb-2">🎈</p><p className="font-bold text-lg">Aún no hay juntas agendadas</p><button onClick={() => setTab("eventos")} className="mt-3 bg-white text-violet-700 font-bold text-sm px-4 py-2 rounded-full">Crear evento</button></div>}
+        <div className="rounded-3xl p-8 text-center bg-gradient-to-br from-ese-500 to-oro-500 text-white"><p className="text-4xl mb-2">🎈</p><p className="font-bold text-lg">Aún no hay juntas agendadas</p><button onClick={() => setTab("eventos")} className="mt-3 bg-white text-ese-700 font-bold text-sm px-4 py-2 rounded-full">Crear evento</button></div>}
 
       {miAsist && miAsist.totalPasados > 0 && (
         <div className="bg-white rounded-2xl border border-slate-100 p-4">
           <p className="text-sm font-bold text-slate-700 mb-1">📊 Mi asistencia</p>
-          <div className="flex justify-between text-xs text-slate-400 mb-1"><span>{miAsist.asistidos} de {miAsist.totalPasados} juntas</span><span className="font-bold text-violet-600">{miAsist.pct}%</span></div>
-          <div className="h-2 bg-slate-100 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500" style={{ width: `${miAsist.pct}%` }} /></div>
+          <div className="flex justify-between text-xs text-slate-400 mb-1"><span>{miAsist.asistidos} de {miAsist.totalPasados} juntas</span><span className="font-bold text-ese-600">{miAsist.pct}%</span></div>
+          <div className="h-2 bg-slate-100 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-ese-500 to-oro-500" style={{ width: `${miAsist.pct}%` }} /></div>
         </div>
       )}
 
@@ -503,18 +503,18 @@ function Inicio({ members, events, meId, ahora, setTab, setEstado, setAnfitrion 
         <section>
           <h3 className="font-bold text-slate-700 mb-2">📅 También se viene</h3>
           <div className="space-y-2">{resto.map(ev => { const cat = catDe(ev.categoria); return (
-            <button key={ev.id} onClick={() => setTab("eventos")} className="w-full bg-white rounded-2xl border border-slate-100 p-3 flex items-center gap-3 text-left hover:border-violet-200">
+            <button key={ev.id} onClick={() => setTab("eventos")} className="w-full bg-white rounded-2xl border border-slate-100 p-3 flex items-center gap-3 text-left hover:border-ese-200">
               <div className="text-2xl">{cat.emoji}</div><div className="min-w-0 flex-1"><p className="text-sm font-semibold text-slate-800 truncate">{ev.titulo}</p><p className="text-xs text-slate-400 capitalize">{DIAS[ev.occ.getDay()]} {ev.occ.getDate()} {MESES[ev.occ.getMonth()]}</p></div>
-              <span className="text-xs font-bold text-violet-600">{etiquetaDias(diasHasta(ev.occ))}</span>
+              <span className="text-xs font-bold text-ese-600">{etiquetaDias(diasHasta(ev.occ))}</span>
             </button>); })}</div>
         </section>
       )}
 
       <section>
-        <div className="flex items-center justify-between mb-2"><h3 className="font-bold text-slate-700">🎂 Próximos cumpleaños</h3><button onClick={() => setTab("cumples")} className="text-xs text-violet-600 font-semibold">Ver todos →</button></div>
+        <div className="flex items-center justify-between mb-2"><h3 className="font-bold text-slate-700">🎂 Próximos cumpleaños</h3><button onClick={() => setTab("cumples")} className="text-xs text-ese-600 font-semibold">Ver todos →</button></div>
         {cumples.length === 0 ? <p className="text-sm text-slate-400 bg-white rounded-2xl border border-slate-100 p-4">Agrega miembros para ver cumpleaños.</p> :
           <div className="space-y-2">{cumples.map((c, i) => (
-            <div key={i} className="bg-white rounded-2xl border border-slate-100 p-3 flex items-center gap-3"><div className="text-2xl">{c.emoji}</div><div className="min-w-0 flex-1"><p className="text-sm font-semibold text-slate-800 truncate">{c.nombre}</p><p className="text-xs text-slate-400">{c.rel}</p></div><span className={`text-xs font-bold ${c.dias <= 7 ? "text-fuchsia-600" : "text-slate-400"}`}>{etiquetaDias(c.dias)}</span></div>
+            <div key={i} className="bg-white rounded-2xl border border-slate-100 p-3 flex items-center gap-3"><div className="text-2xl">{c.emoji}</div><div className="min-w-0 flex-1"><p className="text-sm font-semibold text-slate-800 truncate">{c.nombre}</p><p className="text-xs text-slate-400">{c.rel}</p></div><span className={`text-xs font-bold ${c.dias <= 7 ? "text-oro-600" : "text-slate-400"}`}>{etiquetaDias(c.dias)}</span></div>
           ))}</div>}
       </section>
     </div>
@@ -555,15 +555,15 @@ function Muro({ posts, members, meId, onPost, onLike, onComentar, onBorrar }) {
           {foto && <div className="relative mt-2"><img src={foto} alt="" className="rounded-xl max-h-52 w-full object-cover" /><button onClick={() => setFoto(null)} className="absolute top-2 right-2 bg-slate-900/60 text-white rounded-full p-1"><X size={14} /></button></div>}
           <div className="flex items-center gap-2 mt-2 flex-wrap">
             <button onClick={() => setCategoria(categoria === "comunicado" ? "general" : "comunicado")} className={`text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1 ${categoria === "comunicado" ? "bg-[#0a2540] text-white" : "bg-slate-100 text-slate-500"}`}><Megaphone size={13} /> Comunicado ESE</button>
-            <button onClick={() => fileRef.current?.click()} className="text-sm text-violet-600 font-semibold flex items-center gap-1.5"><Camera size={16} /> {subiendo ? "…" : "Foto"}</button>
+            <button onClick={() => fileRef.current?.click()} className="text-sm text-ese-600 font-semibold flex items-center gap-1.5"><Camera size={16} /> {subiendo ? "…" : "Foto"}</button>
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={elegirFoto} />
-            <button onClick={publicar} className="ml-auto bg-gradient-to-r from-violet-600 to-fuchsia-500 text-white rounded-full px-4 py-1.5 text-sm font-bold flex items-center gap-1.5"><Send size={14} /> Publicar</button>
+            <button onClick={publicar} className="ml-auto bg-gradient-to-r from-ese-600 to-oro-500 text-white rounded-full px-4 py-1.5 text-sm font-bold flex items-center gap-1.5"><Send size={14} /> Publicar</button>
           </div>
         </div>
       ) : <div className="bg-amber-100 border border-amber-200 rounded-2xl px-4 py-2.5 text-xs text-amber-800">Inicia sesión para publicar en el muro.</div>}
 
       <div className="flex gap-2">
-        <button onClick={() => setFiltro("todos")} className={`text-xs font-bold px-3 py-1.5 rounded-full ${filtro === "todos" ? "bg-violet-600 text-white" : "bg-white border border-slate-200 text-slate-500"}`}>Todo el muro</button>
+        <button onClick={() => setFiltro("todos")} className={`text-xs font-bold px-3 py-1.5 rounded-full ${filtro === "todos" ? "bg-ese-600 text-white" : "bg-white border border-slate-200 text-slate-500"}`}>Todo el muro</button>
         <button onClick={() => setFiltro("comunicado")} className={`text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1 ${filtro === "comunicado" ? "bg-[#0a2540] text-white" : "bg-white border border-slate-200 text-slate-500"}`}><Megaphone size={12} /> Comunicados ESE</button>
       </div>
 
@@ -589,7 +589,7 @@ function Post({ post, members, meId, onLike, onComentar, onBorrar }) {
       {post.texto && <p className="px-3 pb-3 text-sm text-slate-700 whitespace-pre-wrap">{post.texto}</p>}
       {post.foto && <img src={post.foto} alt="" className="w-full max-h-96 object-cover" />}
       <div className="p-3 flex items-center gap-4">
-        <button onClick={() => meId && onLike(post.id)} className={`flex items-center gap-1.5 text-sm font-semibold ${liked ? "text-fuchsia-600" : "text-slate-400"}`}><ThumbsUp size={16} /> {(post.likes || []).length || ""}</button>
+        <button onClick={() => meId && onLike(post.id)} className={`flex items-center gap-1.5 text-sm font-semibold ${liked ? "text-oro-600" : "text-slate-400"}`}><ThumbsUp size={16} /> {(post.likes || []).length || ""}</button>
         <button onClick={() => setAbrir(!abrir)} className="flex items-center gap-1.5 text-sm font-semibold text-slate-400"><MessageCircle size={16} /> {(post.comentarios || []).length || ""}</button>
       </div>
       {(abrir || (post.comentarios || []).length > 0) && (
@@ -600,7 +600,7 @@ function Post({ post, members, meId, onLike, onComentar, onBorrar }) {
           {meId && (
             <div className="flex gap-2 items-center">
               <input className={inputCls} value={txt} onChange={e => setTxt(e.target.value)} placeholder="Comenta…" onKeyDown={e => { if (e.key === "Enter" && txt.trim()) { onComentar(post.id, txt.trim()); setTxt(""); } }} />
-              <button onClick={() => { if (txt.trim()) { onComentar(post.id, txt.trim()); setTxt(""); } }} className="text-violet-600"><Send size={18} /></button>
+              <button onClick={() => { if (txt.trim()) { onComentar(post.id, txt.trim()); setTxt(""); } }} className="text-ese-600"><Send size={18} /></button>
             </div>
           )}
         </div>
@@ -621,12 +621,12 @@ function Eventos({ events, members, meId, onEdit, onDelete, setEstado, setAnfitr
     <div className="space-y-5">
       {propuestas.length > 0 && (
         <section>
-          <h3 className="font-bold text-slate-700 mb-2 flex items-center gap-1.5"><Vote size={16} className="text-violet-600" /> Por decidir</h3>
+          <h3 className="font-bold text-slate-700 mb-2 flex items-center gap-1.5"><Vote size={16} className="text-ese-600" /> Por decidir</h3>
           <div className="space-y-3">{propuestas.map(ev => {
             const cat = catDe(ev.categoria);
             const ganadora = [...ev.opcionesFecha].sort((a, b) => (b.votos || []).length - (a.votos || []).length)[0];
             return (
-              <div key={ev.id} className="bg-white rounded-3xl border-2 border-violet-100 overflow-hidden">
+              <div key={ev.id} className="bg-white rounded-3xl border-2 border-ese-100 overflow-hidden">
                 <div className={`h-1.5 bg-gradient-to-r ${cat.grad}`} />
                 <div className="p-4">
                   <div className="flex items-start gap-2"><div className="text-2xl">{cat.emoji}</div><div className="flex-1"><p className="font-bold text-slate-800">{ev.titulo}</p><p className="text-xs text-slate-400">Votación abierta · elige tu fecha</p></div>
@@ -634,10 +634,10 @@ function Eventos({ events, members, meId, onEdit, onDelete, setEstado, setAnfitr
                   <div className="mt-3 space-y-2">{ev.opcionesFecha.map(o => {
                     const d = fechaHora(o.fecha, o.hora), voto = (o.votos || []).includes(meId), n = (o.votos || []).length;
                     return (
-                      <button key={o.id} onClick={() => meId && votarFecha(ev.id, o.id)} disabled={!meId} className={`w-full flex items-center gap-2 rounded-xl border-2 px-3 py-2 text-sm ${voto ? "border-violet-500 bg-violet-50" : "border-slate-100"}`}>
-                        <span className={`w-4 h-4 rounded-full border-2 ${voto ? "bg-violet-500 border-violet-500" : "border-slate-300"}`} />
+                      <button key={o.id} onClick={() => meId && votarFecha(ev.id, o.id)} disabled={!meId} className={`w-full flex items-center gap-2 rounded-xl border-2 px-3 py-2 text-sm ${voto ? "border-ese-500 bg-ese-50" : "border-slate-100"}`}>
+                        <span className={`w-4 h-4 rounded-full border-2 ${voto ? "bg-ese-500 border-ese-500" : "border-slate-300"}`} />
                         <span className="capitalize text-slate-700">{d ? `${DIAS[d.getDay()]} ${d.getDate()} ${MESES[d.getMonth()]}` : "?"}{o.hora ? ` · ${o.hora}` : ""}</span>
-                        <span className="ml-auto text-xs font-bold text-violet-600">{n} voto{n !== 1 ? "s" : ""}</span>
+                        <span className="ml-auto text-xs font-bold text-ese-600">{n} voto{n !== 1 ? "s" : ""}</span>
                       </button>
                     );
                   })}</div>
@@ -690,9 +690,9 @@ function TarjetaEvento({ ev, members, meId, nombreDe, onEdit, onDelete, setEstad
               {ev.lugar && <span className="flex items-center gap-0.5"><MapPin size={10} />{ev.lugar}</span>}
             </p>
             {ev.desc && <p className="text-xs text-slate-500 mt-1">{ev.desc}</p>}
-            <p className="text-[11px] mt-0.5 text-slate-400">{ev.anfitrion ? `🏠 Anfitrión: ${nombreDe(ev.anfitrion).split(" ")[0]}` : "⚠️ Sin anfitrión"}{!ev.anfitrion && meId && <button onClick={() => setAnfitrion(ev.id, meId)} className="ml-1 text-violet-600 font-semibold">Ser anfitrión</button>}</p>
+            <p className="text-[11px] mt-0.5 text-slate-400">{ev.anfitrion ? `🏠 Anfitrión: ${nombreDe(ev.anfitrion).split(" ")[0]}` : "⚠️ Sin anfitrión"}{!ev.anfitrion && meId && <button onClick={() => setAnfitrion(ev.id, meId)} className="ml-1 text-ese-600 font-semibold">Ser anfitrión</button>}</p>
           </div>
-          <div className="flex gap-1 shrink-0"><button onClick={() => onEdit(ev)} className="text-slate-300 hover:text-violet-600 p-1"><Pencil size={14} /></button><button onClick={() => onDelete(ev.id)} className="text-slate-300 hover:text-rose-500 p-1"><Trash2 size={14} /></button></div>
+          <div className="flex gap-1 shrink-0"><button onClick={() => onEdit(ev)} className="text-slate-300 hover:text-ese-600 p-1"><Pencil size={14} /></button><button onClick={() => onDelete(ev.id)} className="text-slate-300 hover:text-rose-500 p-1"><Trash2 size={14} /></button></div>
         </div>
         <div className="mt-2"><BarraAsistGris confirmados={(ev.asistentes || []).length} total={members.length} /></div>
         <div className="mt-3 flex items-center gap-2 flex-wrap">
@@ -708,7 +708,7 @@ function TarjetaEvento({ ev, members, meId, nombreDe, onEdit, onDelete, setEstad
             <div className="space-y-1">{ev.aportes.map(a => (
               <div key={a.id} className="flex items-center justify-between text-sm"><span className="text-slate-700">{a.item}</span>
                 {a.asignadoA ? <button onClick={() => meId && tomarAporte(ev.id, a.id, true)} className="text-xs text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full flex items-center gap-1"><Check size={11} /> {nombreDe(a.asignadoA).split(" ")[0]}</button>
-                  : <button onClick={() => meId && tomarAporte(ev.id, a.id, false)} disabled={!meId} className={`text-xs text-slate-500 border border-dashed border-slate-300 px-2 py-0.5 rounded-full hover:border-violet-400 hover:text-violet-700 ${!meId && "opacity-50"}`}>Me anoto</button>}
+                  : <button onClick={() => meId && tomarAporte(ev.id, a.id, false)} disabled={!meId} className={`text-xs text-slate-500 border border-dashed border-slate-300 px-2 py-0.5 rounded-full hover:border-ese-400 hover:text-ese-700 ${!meId && "opacity-50"}`}>Me anoto</button>}
               </div>
             ))}</div>
           </div>
@@ -720,7 +720,7 @@ function TarjetaEvento({ ev, members, meId, nombreDe, onEdit, onDelete, setEstad
 }
 function BarraAsistGris({ confirmados, total }) {
   const pct = total ? Math.round(confirmados / total * 100) : 0;
-  return <div><div className="flex justify-between text-[11px] text-slate-400 mb-1"><span>👥 {confirmados} de {total} confirmaron</span><span>{pct}%</span></div><div className="h-1.5 bg-slate-100 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full" style={{ width: `${pct}%` }} /></div></div>;
+  return <div><div className="flex justify-between text-[11px] text-slate-400 mb-1"><span>👥 {confirmados} de {total} confirmaron</span><span>{pct}%</span></div><div className="h-1.5 bg-slate-100 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-ese-500 to-oro-500 rounded-full" style={{ width: `${pct}%` }} /></div></div>;
 }
 
 /* ============================ Hitos ============================ */
@@ -732,11 +732,11 @@ function Hitos({ hitos, meId, onAdd, onDelete }) {
   const orden = [...hitos].map(h => ({ ...h, occ: fechaHora(h.fecha) })).filter(h => h.occ).sort((a, b) => a.occ - b.occ);
   return (
     <div className="space-y-4">
-      <button onClick={() => setForm(!form)} className="w-full bg-white rounded-2xl border-2 border-dashed border-violet-200 text-violet-600 font-semibold py-3 flex items-center justify-center gap-2"><Plus size={18} /> Proponer fecha / hito</button>
+      <button onClick={() => setForm(!form)} className="w-full bg-white rounded-2xl border-2 border-dashed border-ese-200 text-ese-600 font-semibold py-3 flex items-center justify-center gap-2"><Plus size={18} /> Proponer fecha / hito</button>
       {form && (
         <div className="bg-white rounded-2xl border border-slate-100 p-4">
           <Campo label="Nombre"><input className={inputCls} value={nombre} onChange={e => setNombre(e.target.value)} placeholder="Ej: Fiestas Patrias, Matrimonio de…" /></Campo>
-          <Campo label="Emoji"><div className="flex gap-1 flex-wrap">{sugeridos.map(s => <button key={s} onClick={() => setEmoji(s)} className={`text-xl w-9 h-9 rounded-lg ${emoji === s ? "bg-violet-100" : "bg-slate-50"}`}>{s}</button>)}<input className={inputCls + " w-16"} value={emoji} onChange={e => setEmoji(e.target.value)} /></div></Campo>
+          <Campo label="Emoji"><div className="flex gap-1 flex-wrap">{sugeridos.map(s => <button key={s} onClick={() => setEmoji(s)} className={`text-xl w-9 h-9 rounded-lg ${emoji === s ? "bg-ese-100" : "bg-slate-50"}`}>{s}</button>)}<input className={inputCls + " w-16"} value={emoji} onChange={e => setEmoji(e.target.value)} /></div></Campo>
           <Campo label="Fecha"><input type="date" className={inputCls} value={fecha} onChange={e => setFecha(e.target.value)} /></Campo>
           <Campo label="Descripción"><input className={inputCls} value={desc} onChange={e => setDesc(e.target.value)} placeholder="Opcional" /></Campo>
           <button onClick={add} className={btnPrim}>Agregar hito</button>
@@ -744,7 +744,7 @@ function Hitos({ hitos, meId, onAdd, onDelete }) {
       )}
       {orden.length === 0 ? <Vacio emoji="🎯" texto="Aún no hay hitos. Agrega las fechas grandes: Fiestas Patrias, matrimonios, viajes…" /> :
         <div className="grid sm:grid-cols-2 gap-3">{orden.map(h => { const dias = diasHasta(h.occ); return (
-          <div key={h.id} className="bg-gradient-to-br from-violet-600 to-fuchsia-500 rounded-3xl p-4 text-white relative overflow-hidden">
+          <div key={h.id} className="bg-gradient-to-br from-ese-600 to-oro-500 rounded-3xl p-4 text-white relative overflow-hidden">
             <div className="absolute -right-3 -top-3 text-7xl opacity-20">{h.emoji}</div>
             <div className="flex justify-between items-start"><div><p className="text-3xl">{h.emoji}</p><p className="font-extrabold text-lg mt-1">{h.nombre}</p></div>
               <div className="text-right"><p className="text-3xl font-extrabold leading-none">{dias >= 0 ? dias : "—"}</p><p className="text-[10px] uppercase text-white/70">{dias >= 0 ? "días" : "pasó"}</p></div></div>
@@ -775,14 +775,14 @@ function Cumples({ members }) {
   return (
     <div>
       <div className="flex gap-2 mb-3 overflow-x-auto pb-1">{tabs.map(([k, l, n]) => (
-        <button key={k} onClick={() => setFiltro(k)} className={`text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap ${filtro === k ? "bg-violet-600 text-white" : "bg-white border border-slate-200 text-slate-500"}`}>{l} {n}</button>
+        <button key={k} onClick={() => setFiltro(k)} className={`text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap ${filtro === k ? "bg-ese-600 text-white" : "bg-white border border-slate-200 text-slate-500"}`}>{l} {n}</button>
       ))}</div>
       <div className="space-y-2">{lista.map((c, i) => (
         <div key={i} className="bg-white rounded-2xl border border-slate-100 p-3 flex items-center gap-3">
-          <div className="w-11 text-center shrink-0 bg-fuchsia-50 rounded-xl py-1"><p className="text-[10px] text-fuchsia-500 uppercase font-bold">{MESES[c.m - 1]}</p><p className="font-extrabold text-lg text-fuchsia-700 leading-none">{c.d}</p></div>
+          <div className="w-11 text-center shrink-0 bg-oro-50 rounded-xl py-1"><p className="text-[10px] text-oro-500 uppercase font-bold">{MESES[c.m - 1]}</p><p className="font-extrabold text-lg text-oro-700 leading-none">{c.d}</p></div>
           <div className="text-xl">{c.emoji}</div>
           <div className="min-w-0 flex-1"><p className="text-sm font-semibold text-slate-800 truncate">{c.nombre}</p><p className="text-xs text-slate-400">{c.rel}{c.edad ? ` · cumple ${c.edad}` : ""}</p></div>
-          <p className={`text-xs font-bold ${c.dias <= 7 ? "text-fuchsia-600" : "text-slate-400"}`}>{etiquetaDias(c.dias)}</p>
+          <p className={`text-xs font-bold ${c.dias <= 7 ? "text-oro-600" : "text-slate-400"}`}>{etiquetaDias(c.dias)}</p>
         </div>
       ))}</div>
     </div>
@@ -790,15 +790,15 @@ function Cumples({ members }) {
 }
 
 /* ============================ Miembros ============================ */
-function Miembros({ members, meId, onEdit, onDelete }) {
-  if (members.length === 0) return <Vacio emoji="👥" texto="Aún no hay miembros. Usa el botón + para agregar el primero." />;
+function Miembros({ members, meId, esAdmin, onEdit, onDelete }) {
+  if (members.length === 0) return <Vacio emoji="👥" texto={esAdmin ? "Aún no hay miembros. Usa el botón + para agregar el primero." : "Aún no hay miembros registrados."} />;
   return (
     <div className="grid sm:grid-cols-2 gap-2">{members.map(m => (
       <div key={m.id} className="bg-white rounded-2xl border border-slate-100 p-4">
         <div className="flex items-start gap-3">
           <Avatar nombre={m.nombre} size={46} />
-          <div className="min-w-0 flex-1"><p className="text-sm font-bold text-slate-800 flex items-center gap-1.5 truncate">{m.nombre}{m.id === meId && <span className="text-[10px] bg-violet-100 text-violet-700 px-1.5 py-0.5 rounded-full">Tú</span>}</p>{m.email && <p className="text-xs text-slate-400 truncate">{m.email}</p>}{m.telefono && <p className="text-xs text-slate-400">{m.telefono}</p>}</div>
-          <div className="flex gap-1"><button onClick={() => onEdit(m)} className="text-slate-300 hover:text-violet-600 p-1"><Pencil size={15} /></button><button onClick={() => onDelete(m.id)} className="text-slate-300 hover:text-rose-500 p-1"><Trash2 size={15} /></button></div>
+          <div className="min-w-0 flex-1"><p className="text-sm font-bold text-slate-800 flex items-center gap-1.5 truncate">{m.nombre}{m.id === meId && <span className="text-[10px] bg-ese-100 text-ese-700 px-1.5 py-0.5 rounded-full">Tú</span>}</p>{m.email && <p className="text-xs text-slate-400 truncate">{m.email}</p>}{m.telefono && <p className="text-xs text-slate-400">{m.telefono}</p>}</div>
+          {esAdmin && <div className="flex gap-1"><button onClick={() => onEdit(m)} className="text-slate-300 hover:text-ese-600 p-1"><Pencil size={15} /></button><button onClick={() => onDelete(m.id)} className="text-slate-300 hover:text-rose-500 p-1"><Trash2 size={15} /></button></div>}
         </div>
         <div className="mt-3 space-y-1 text-xs text-slate-500">{m.rut && <p>🪪 {formatearRut(m.rut)}</p>}{m.cumple && <p>🎂 {parseFecha(m.cumple).d} {MESES[parseFecha(m.cumple).m - 1]}</p>}{m.conyuge && <p>💗 {m.conyuge.nombre}</p>}{(m.hijos || []).length > 0 && <p>🧒 {m.hijos.map(h => h.nombre).join(", ")}</p>}</div>
       </div>
@@ -813,14 +813,14 @@ function Ranking({ members, events }) {
   const medalla = ["🥇", "🥈", "🥉"];
   return (
     <div>
-      <div className="bg-gradient-to-br from-violet-600 to-fuchsia-500 rounded-3xl p-4 mb-4 text-white"><p className="font-bold flex items-center gap-1.5"><Trophy size={16} /> Ranking de participación</p><p className="text-xs text-white/85 mt-1">Sube quien mueve la promo: <b>+20 pts</b> por crear un evento y <b>+10 pts</b> por asistir. Se muestra también tu % de asistencia. 🎯</p></div>
+      <div className="bg-gradient-to-br from-ese-600 to-oro-500 rounded-3xl p-4 mb-4 text-white"><p className="font-bold flex items-center gap-1.5"><Trophy size={16} /> Ranking de participación</p><p className="text-xs text-white/85 mt-1">Sube quien mueve la promo: <b>+20 pts</b> por crear un evento y <b>+10 pts</b> por asistir. Se muestra también tu % de asistencia. 🎯</p></div>
       <div className="space-y-2">{filas.map((m, i) => (
         <div key={m.id} className={`bg-white rounded-2xl border p-3 ${i === 0 ? "border-amber-300 shadow-sm" : "border-slate-100"}`}>
           <div className="flex items-center gap-3">
             <div className="w-8 text-center text-lg">{i < 3 ? medalla[i] : <span className="text-sm font-bold text-slate-400">{i + 1}</span>}</div>
             <Avatar nombre={m.nombre} size={40} />
             <div className="min-w-0 flex-1"><p className="text-sm font-bold text-slate-800 truncate">{m.nombre}</p><p className="text-[11px] text-slate-400">🎪 {m.creados} creados · ✅ {m.asistidos} · ❌ {m.ausente} · ⏳ {m.pendiente}</p></div>
-            <div className="text-right"><p className="font-extrabold text-lg bg-gradient-to-r from-violet-600 to-fuchsia-500 bg-clip-text text-transparent leading-none">{m.total}</p><p className="text-[10px] text-slate-400 uppercase">pts</p></div>
+            <div className="text-right"><p className="font-extrabold text-lg bg-gradient-to-r from-ese-600 to-oro-500 bg-clip-text text-transparent leading-none">{m.total}</p><p className="text-[10px] text-slate-400 uppercase">pts</p></div>
           </div>
           {m.totalPasados > 0 && <div className="mt-2 pl-11"><div className="flex justify-between text-[11px] text-slate-400 mb-0.5"><span>Asistencia</span><span className="font-bold text-amber-500">{m.pct}%</span></div><div className="h-1.5 bg-slate-100 rounded-full overflow-hidden"><div className="h-full bg-amber-400 rounded-full" style={{ width: `${m.pct}%` }} /></div></div>}
         </div>
@@ -842,17 +842,17 @@ function Reglamento({ reglas, votaciones, members, meId, onAddRegla, onDelRegla,
           {reglas.length === 0 && <p className="p-4 text-sm text-slate-400">Aún no hay reglas. Agrega la primera abajo.</p>}
           {reglas.map((r, i) => (
             <div key={r.id} className="flex items-start gap-3 p-3">
-              <span className="text-xs font-bold text-violet-400 mt-0.5">{i + 1}</span>
+              <span className="text-xs font-bold text-ese-400 mt-0.5">{i + 1}</span>
               <p className="text-sm text-slate-700 flex-1">{r.texto}</p>
               <button onClick={() => onDelRegla(r.id)} className="text-slate-300 hover:text-rose-500"><Trash2 size={14} /></button>
             </div>
           ))}
         </div>
-        {meId && <div className="flex gap-2 mt-2"><input className={inputCls} value={nuevaRegla} onChange={e => setNuevaRegla(e.target.value)} placeholder="Nueva regla…" onKeyDown={e => { if (e.key === "Enter" && nuevaRegla.trim()) { onAddRegla(nuevaRegla.trim()); setNuevaRegla(""); } }} /><button onClick={() => { if (nuevaRegla.trim()) { onAddRegla(nuevaRegla.trim()); setNuevaRegla(""); } }} className="bg-violet-600 text-white rounded-xl px-4 text-sm font-bold">Añadir</button></div>}
+        {meId && <div className="flex gap-2 mt-2"><input className={inputCls} value={nuevaRegla} onChange={e => setNuevaRegla(e.target.value)} placeholder="Nueva regla…" onKeyDown={e => { if (e.key === "Enter" && nuevaRegla.trim()) { onAddRegla(nuevaRegla.trim()); setNuevaRegla(""); } }} /><button onClick={() => { if (nuevaRegla.trim()) { onAddRegla(nuevaRegla.trim()); setNuevaRegla(""); } }} className="bg-ese-600 text-white rounded-xl px-4 text-sm font-bold">Añadir</button></div>}
       </section>
 
       <section>
-        <div className="flex items-center justify-between mb-2"><h3 className="font-bold text-slate-700 flex items-center gap-1.5"><Vote size={16} /> Votaciones</h3><button onClick={() => setFormV(!formV)} className="text-xs text-violet-600 font-semibold flex items-center gap-1"><Plus size={13} /> Nueva</button></div>
+        <div className="flex items-center justify-between mb-2"><h3 className="font-bold text-slate-700 flex items-center gap-1.5"><Vote size={16} /> Votaciones</h3><button onClick={() => setFormV(!formV)} className="text-xs text-ese-600 font-semibold flex items-center gap-1"><Plus size={13} /> Nueva</button></div>
         <p className="text-[11px] text-slate-400 mb-2">Las reglas se aprueban con 2/3 de los votos emitidos en 1 semana.</p>
         {formV && meId && (
           <div className="bg-white rounded-2xl border border-slate-100 p-4 mb-3">
@@ -868,10 +868,10 @@ function Reglamento({ reglas, votaciones, members, meId, onAddRegla, onDelRegla,
             return (
               <div key={v.id} className="bg-white rounded-2xl border border-slate-100 p-4">
                 <div className="flex items-start justify-between"><p className="font-bold text-slate-800">{v.titulo}</p>
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${s.cerrada ? (s.aprobada ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-600") : "bg-violet-100 text-violet-700"}`}>{s.cerrada ? (s.aprobada ? "Aprobada ✅" : "Rechazada") : `Abierta · ${diasRest >= 0 ? diasRest + "d" : "cerrando"}`}</span></div>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${s.cerrada ? (s.aprobada ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-600") : "bg-ese-100 text-ese-700"}`}>{s.cerrada ? (s.aprobada ? "Aprobada ✅" : "Rechazada") : `Abierta · ${diasRest >= 0 ? diasRest + "d" : "cerrando"}`}</span></div>
                 {v.desc && <p className="text-xs text-slate-500 mt-1">{v.desc}</p>}
                 <p className="text-[11px] text-slate-400 mt-1">Propuesta por {nombreDe(v.creadoPor)}</p>
-                <div className="mt-2"><div className="flex justify-between text-[11px] text-slate-400 mb-0.5"><span>{s.si} sí · {s.no} no</span><span className="font-bold">{s.pctSi}% a favor (se necesita 67%)</span></div><div className="h-2 bg-slate-100 rounded-full overflow-hidden"><div className={`h-full rounded-full ${s.pctSi >= 67 ? "bg-emerald-500" : "bg-violet-500"}`} style={{ width: `${s.pctSi}%` }} /></div></div>
+                <div className="mt-2"><div className="flex justify-between text-[11px] text-slate-400 mb-0.5"><span>{s.si} sí · {s.no} no</span><span className="font-bold">{s.pctSi}% a favor (se necesita 67%)</span></div><div className="h-2 bg-slate-100 rounded-full overflow-hidden"><div className={`h-full rounded-full ${s.pctSi >= 67 ? "bg-emerald-500" : "bg-ese-500"}`} style={{ width: `${s.pctSi}%` }} /></div></div>
                 {!s.cerrada && meId && (
                   <div className="flex gap-2 mt-3">
                     <button onClick={() => onVotar(v.id, "si")} className={`flex-1 text-sm font-bold py-2 rounded-xl flex items-center justify-center gap-1.5 ${miSi ? "bg-emerald-500 text-white" : "bg-emerald-50 text-emerald-700"}`}><ThumbsUp size={14} /> A favor</button>
@@ -920,7 +920,7 @@ function Auth({ nombrePromo, logo, onRegister, onLogin, onRecuperar }) {
 
   const titulo = modo === "registro" ? "Crea tu cuenta" : modo === "recuperar" ? "Recuperar acceso" : "Inicia sesión";
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-600 to-fuchsia-500 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-ese-600 to-oro-500 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm p-6">
         <div className="text-center mb-5">
           <div className="flex justify-center mb-2"><EmblemaESE logo={logo} size={60} /></div>
@@ -943,11 +943,11 @@ function Auth({ nombrePromo, logo, onRegister, onLogin, onRecuperar }) {
         {ok && <p className="text-xs text-emerald-600 mb-2">{ok}</p>}
         <button onClick={submit} disabled={cargando} className={btnPrim}>{cargando ? "…" : modo === "registro" ? "Crear cuenta" : modo === "recuperar" ? "Enviar correo" : "Entrar"}</button>
 
-        {modo === "login" && <button onClick={() => { setModo("recuperar"); setError(""); setOk(""); }} className="w-full text-center text-xs text-violet-600 font-semibold mt-3">¿Olvidaste tu clave?</button>}
+        {modo === "login" && <button onClick={() => { setModo("recuperar"); setError(""); setOk(""); }} className="w-full text-center text-xs text-ese-600 font-semibold mt-3">¿Olvidaste tu clave?</button>}
 
         <p className="text-center text-xs text-slate-400 mt-3">
           {modo === "registro" ? "¿Ya tienes cuenta? " : modo === "recuperar" ? "" : "¿Primera vez? "}
-          <button onClick={() => { setModo(modo === "login" ? "registro" : "login"); setError(""); setOk(""); }} className="text-violet-600 font-semibold">{modo === "registro" ? "Inicia sesión" : modo === "recuperar" ? "Volver a inicio de sesión" : "Crea tu cuenta"}</button>
+          <button onClick={() => { setModo(modo === "login" ? "registro" : "login"); setError(""); setOk(""); }} className="text-ese-600 font-semibold">{modo === "registro" ? "Inicia sesión" : modo === "recuperar" ? "Volver a inicio de sesión" : "Crea tu cuenta"}</button>
         </p>
       </div>
     </div>
@@ -964,7 +964,7 @@ function NuevaClaveScreen({ nombrePromo, logo, onGuardar }) {
     const err = await onGuardar(p1); if (err) setMsg(err);
   }
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-600 to-fuchsia-500 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-ese-600 to-oro-500 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm p-6">
         <div className="text-center mb-5"><div className="flex justify-center mb-2"><EmblemaESE logo={logo} size={60} /></div><h1 className="font-extrabold text-xl text-slate-800">{nombrePromo}</h1><p className="text-sm text-slate-400">Define tu nueva clave</p></div>
         <Campo label="Nueva contraseña"><input type="password" className={inputCls} value={p1} onChange={e => setP1(e.target.value)} placeholder="••••••" /></Campo>
@@ -995,13 +995,13 @@ function AdminUsuarioRow({ u, member, esYo, soloAdmin, onEliminar, onReset, onTo
       <div className="flex items-center gap-2">
         <Avatar nombre={member?.nombre} size={34} />
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-bold text-slate-800 truncate">{member?.nombre || "—"} {u.esAdmin && <span className="text-[10px] bg-violet-100 text-violet-700 px-1.5 py-0.5 rounded-full">admin</span>}{esYo && <span className="text-[10px] text-slate-400"> (tú)</span>}</p>
+          <p className="text-sm font-bold text-slate-800 truncate">{member?.nombre || "—"} {u.esAdmin && <span className="text-[10px] bg-ese-100 text-ese-700 px-1.5 py-0.5 rounded-full">admin</span>}{esYo && <span className="text-[10px] text-slate-400"> (tú)</span>}</p>
           <p className="text-[11px] text-slate-400 truncate">{email || "sin correo"}</p>
         </div>
       </div>
       <div className="flex flex-wrap gap-1.5 mt-2">
         <button onClick={() => onReset()} className="text-[11px] font-semibold px-2 py-1 rounded-full bg-slate-100 text-slate-600">Ayuda con clave</button>
-        <button onClick={() => onToggleAdmin(u.id)} disabled={esYo && soloAdmin} className={`text-[11px] font-semibold px-2 py-1 rounded-full ${u.esAdmin ? "bg-violet-50 text-violet-600" : "bg-slate-100 text-slate-600"} ${esYo && soloAdmin ? "opacity-40" : ""}`}>{u.esAdmin ? "Quitar admin" : "Hacer admin"}</button>
+        <button onClick={() => onToggleAdmin(u.id)} disabled={esYo && soloAdmin} className={`text-[11px] font-semibold px-2 py-1 rounded-full ${u.esAdmin ? "bg-ese-50 text-ese-600" : "bg-slate-100 text-slate-600"} ${esYo && soloAdmin ? "opacity-40" : ""}`}>{u.esAdmin ? "Quitar admin" : "Hacer admin"}</button>
         <button onClick={() => onEliminar(u.id)} disabled={esYo} className={`text-[11px] font-semibold px-2 py-1 rounded-full bg-rose-50 text-rose-600 ${esYo ? "opacity-40" : ""}`}>Quitar</button>
       </div>
     </div>
@@ -1020,8 +1020,8 @@ function AdminPanel({ datos, usuarios, members, meUserId, onClose, onImportar, o
   return (
     <Modal titulo="🛡️ Administración" onClose={onClose}>
       <div className="flex gap-2 mb-4">
-        <button onClick={() => setTabA("usuarios")} className={`flex-1 text-sm font-bold py-2 rounded-xl ${tabA === "usuarios" ? "bg-violet-600 text-white" : "bg-slate-100 text-slate-500"}`}>Usuarios</button>
-        <button onClick={() => setTabA("respaldo")} className={`flex-1 text-sm font-bold py-2 rounded-xl ${tabA === "respaldo" ? "bg-violet-600 text-white" : "bg-slate-100 text-slate-500"}`}>Respaldo</button>
+        <button onClick={() => setTabA("usuarios")} className={`flex-1 text-sm font-bold py-2 rounded-xl ${tabA === "usuarios" ? "bg-ese-600 text-white" : "bg-slate-100 text-slate-500"}`}>Usuarios</button>
+        <button onClick={() => setTabA("respaldo")} className={`flex-1 text-sm font-bold py-2 rounded-xl ${tabA === "respaldo" ? "bg-ese-600 text-white" : "bg-slate-100 text-slate-500"}`}>Respaldo</button>
       </div>
       {tabA === "usuarios" ? (
         <div className="space-y-2">
@@ -1032,12 +1032,12 @@ function AdminPanel({ datos, usuarios, members, meUserId, onClose, onImportar, o
       ) : (
         <>
           <p className="text-xs text-slate-400 mb-3">Descarga una copia completa de todo lo ingresado y guárdala en lugar seguro. Incluye credenciales encriptadas.</p>
-          <div className="grid grid-cols-3 gap-2 mb-4">{stats.map(([k, n]) => <div key={k} className="bg-slate-50 rounded-xl p-2 text-center"><p className="font-extrabold text-lg text-violet-600">{n}</p><p className="text-[10px] text-slate-400">{k}</p></div>)}</div>
+          <div className="grid grid-cols-3 gap-2 mb-4">{stats.map(([k, n]) => <div key={k} className="bg-slate-50 rounded-xl p-2 text-center"><p className="font-extrabold text-lg text-ese-600">{n}</p><p className="text-[10px] text-slate-400">{k}</p></div>)}</div>
           <button onClick={exportar} className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl py-2.5 text-sm font-bold flex items-center justify-center gap-2 mb-4"><Download size={16} /> Descargar respaldo (.json)</button>
           <div className="border-t border-slate-100 pt-3">
             <p className="text-sm font-semibold text-slate-600 mb-2 flex items-center gap-1.5"><Upload size={15} /> Restaurar desde respaldo</p>
             <input ref={fileRef} type="file" accept="application/json,.json" className="hidden" onChange={leerArchivo} />
-            <button onClick={() => fileRef.current?.click()} className="text-xs text-violet-600 font-semibold mb-2 block">{archivo || "Elegir archivo…"}</button>
+            <button onClick={() => fileRef.current?.click()} className="text-xs text-ese-600 font-semibold mb-2 block">{archivo || "Elegir archivo…"}</button>
             {texto && <button onClick={importar} className="w-full bg-rose-500 text-white rounded-xl py-2 text-sm font-bold">Reemplazar datos con este respaldo</button>}
           </div>
         </>
@@ -1062,12 +1062,12 @@ function MiPerfil({ member, usuario, esAdmin, onEditarDatos, onCambiarUsuario, o
   }
   return (
     <div className="space-y-4">
-      <div className="bg-gradient-to-br from-violet-600 to-fuchsia-500 rounded-3xl p-5 text-white flex items-center gap-3">
+      <div className="bg-gradient-to-br from-ese-600 to-oro-500 rounded-3xl p-5 text-white flex items-center gap-3">
         <Avatar nombre={member?.nombre} size={54} />
         <div><p className="font-extrabold text-lg">{member?.nombre}</p><p className="text-sm text-white/80">@{usuario.username}{esAdmin ? " · admin" : ""}</p></div>
       </div>
       <div className="bg-white rounded-2xl border border-slate-100 p-4">
-        <div className="flex items-center justify-between mb-2"><p className="font-bold text-slate-700">Datos personales</p><button onClick={onEditarDatos} className="text-xs text-violet-600 font-semibold flex items-center gap-1"><Pencil size={13} /> Editar</button></div>
+        <div className="flex items-center justify-between mb-2"><p className="font-bold text-slate-700">Datos personales</p><button onClick={onEditarDatos} className="text-xs text-ese-600 font-semibold flex items-center gap-1"><Pencil size={13} /> Editar</button></div>
         <div className="space-y-1 text-sm text-slate-600">
           {member?.rut && <p>🪪 {formatearRut(member.rut)}</p>}
           {member?.email ? <p>✉️ {member.email}</p> : <p className="text-amber-500">✉️ Sin email — agrégalo para poder recuperar tu clave</p>}
@@ -1079,7 +1079,7 @@ function MiPerfil({ member, usuario, esAdmin, onEditarDatos, onCambiarUsuario, o
       </div>
       <div className="bg-white rounded-2xl border border-slate-100 p-4">
         <p className="font-bold text-slate-700 mb-2">Correo de acceso</p>
-        <div className="flex gap-2"><input className={inputCls} value={nuevoUser} onChange={e => setNuevoUser(e.target.value)} autoCapitalize="none" placeholder="correo@ejemplo.com" /><button onClick={guardarUsuario} className="bg-violet-600 text-white rounded-xl px-4 text-sm font-bold shrink-0">Guardar</button></div>
+        <div className="flex gap-2"><input className={inputCls} value={nuevoUser} onChange={e => setNuevoUser(e.target.value)} autoCapitalize="none" placeholder="correo@ejemplo.com" /><button onClick={guardarUsuario} className="bg-ese-600 text-white rounded-xl px-4 text-sm font-bold shrink-0">Guardar</button></div>
         {msgUser && <p className="text-xs mt-1 text-slate-500">{msgUser}</p>}
       </div>
       <div className="bg-white rounded-2xl border border-slate-100 p-4">
@@ -1115,10 +1115,10 @@ function InvitarModal({ nombrePromo, logo, enlace, esAdmin, onClose, onGuardarEn
           <Campo label="Enlace de la app (cópialo del botón Compartir de Claude)">
             <div className="flex gap-2">
               <input className={inputCls} value={link} onChange={e => setLink(e.target.value)} placeholder="https://claude.site/…" />
-              <button onClick={() => onGuardarEnlace(link.trim())} className="bg-violet-600 text-white rounded-xl px-3 text-sm font-bold shrink-0">Guardar</button>
+              <button onClick={() => onGuardarEnlace(link.trim())} className="bg-ese-600 text-white rounded-xl px-3 text-sm font-bold shrink-0">Guardar</button>
             </div>
           </Campo>
-          <button onClick={() => fileRef.current?.click()} className="text-xs text-violet-600 font-semibold mb-3 flex items-center gap-1"><ImageIcon size={13} /> Subir logo oficial del ESE</button>
+          <button onClick={() => fileRef.current?.click()} className="text-xs text-ese-600 font-semibold mb-3 flex items-center gap-1"><ImageIcon size={13} /> Subir logo oficial del ESE</button>
           <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={subir} />
         </>
       )}
@@ -1152,6 +1152,7 @@ export default function App() {
   const [ahora, setAhora] = useState(new Date());
 
   const [recoveryMode, setRecoveryMode] = useState(false);
+  const creandoPerfil = useRef(false);
 
   const usuarioActual = usuarios.find(u => u.id === sesionUserId) || null;
   const meId = usuarioActual?.memberId || null;
@@ -1201,31 +1202,30 @@ export default function App() {
   }
 
   async function asegurarPerfil() {
-    const { data: ex } = await supabase.from("perfiles").select("id").eq("id", sesionUserId).maybeSingle();
-    if (ex) { cargarTodo(); return; }
-    const { data: u } = await supabase.auth.getUser();
-    const email = u.user?.email || "";
-    const { data: mrow } = await supabase.from("miembros").insert({ nombre: email.split("@")[0] || "Nuevo", email }).select().single();
-    if (!mrow) return;
-    const { count } = await supabase.from("perfiles").select("*", { count: "exact", head: true });
-    await supabase.from("perfiles").insert({ id: sesionUserId, miembro_id: mrow.id, es_admin: (count || 0) === 0 });
-    cargarTodo();
+    if (creandoPerfil.current) return;
+    creandoPerfil.current = true;
+    try {
+      const { data: ex } = await supabase.from("perfiles").select("id").eq("id", sesionUserId).maybeSingle();
+      if (ex) { await cargarTodo(); return; }
+      const { data: u } = await supabase.auth.getUser();
+      const email = u.user?.email || "";
+      const nombre = u.user?.user_metadata?.nombre || email.split("@")[0] || "Nuevo";
+      const { data: mrow, error: em } = await supabase.from("miembros").insert({ nombre, email }).select().single();
+      if (em || !mrow) { await cargarTodo(); return; }
+      const { count } = await supabase.from("perfiles").select("*", { count: "exact", head: true });
+      const { error: ep } = await supabase.from("perfiles").insert({ id: sesionUserId, miembro_id: mrow.id, es_admin: (count || 0) === 0 });
+      if (ep) { await supabase.from("miembros").delete().eq("id", mrow.id); }
+      await cargarTodo();
+    } finally { creandoPerfil.current = false; }
   }
 
   async function logout() { await supabase.auth.signOut(); setSesionUserId(null); }
   function traducirAuth(msg) { if (/registered|already/i.test(msg)) return "Ese correo ya tiene cuenta. Inicia sesión."; if (/password/i.test(msg)) return "La contraseña debe tener al menos 6 caracteres."; if (/email/i.test(msg)) return "Revisa que el correo esté bien escrito."; return "No se pudo completar. Intenta de nuevo."; }
   async function registrar({ email, password, nombre }) {
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { nombre } } });
     if (error) return traducirAuth(error.message);
     if (!data.session) return "Te enviamos un correo para confirmar tu cuenta. Confírmalo y luego inicia sesión.";
-    const { data: ex } = await supabase.from("perfiles").select("id").eq("id", data.user.id).maybeSingle();
-    if (!ex) {
-      const { data: mrow, error: me } = await supabase.from("miembros").insert({ nombre: nombre || email.split("@")[0], email }).select().single();
-      if (me) return "No se pudo crear tu perfil. Intenta de nuevo.";
-      const { count } = await supabase.from("perfiles").select("*", { count: "exact", head: true });
-      await supabase.from("perfiles").insert({ id: data.user.id, miembro_id: mrow.id, es_admin: (count || 0) === 0 });
-    }
-    await cargarTodo();
+    await asegurarPerfil();
     return null;
   }
   async function login({ email, password }) {
@@ -1327,14 +1327,14 @@ export default function App() {
   const todasTabs = [...tabsPrinc, ...tabsMas];
   function irA(id) { setTab(id); setMasOpen(false); }
 
-  if (loading) return <div className="min-h-screen bg-violet-50 flex items-center justify-center text-violet-400 text-sm">Cargando… ✨</div>;
+  if (loading) return <div className="min-h-screen bg-ese-50 flex items-center justify-center text-ese-400 text-sm">Cargando… ✨</div>;
   if (recoveryMode) return <NuevaClaveScreen nombrePromo={nombrePromo} logo={logo} onGuardar={guardarNuevaClave} />;
   if (!sesionUserId) return <Auth nombrePromo={nombrePromo} logo={logo} onRegister={registrar} onLogin={login} onRecuperar={enviarRecuperacion} />;
-  if (!usuarioActual) return <div className="min-h-screen bg-violet-50 flex items-center justify-center text-violet-400 text-sm">Preparando tu perfil… ✨</div>;
+  if (!usuarioActual) return <div className="min-h-screen bg-ese-50 flex items-center justify-center text-ese-400 text-sm">Preparando tu perfil… ✨</div>;
 
   return (
-    <div className="min-h-screen bg-violet-50 font-sans text-slate-800 pb-24 sm:pb-6">
-      <header className="bg-gradient-to-r from-violet-600 to-fuchsia-500 sticky top-0 z-40 shadow-md">
+    <div className="min-h-screen bg-ese-50 font-sans text-slate-800 pb-24 sm:pb-6">
+      <header className="bg-gradient-to-r from-ese-600 to-oro-500 sticky top-0 z-40 shadow-md">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
           <div className="shrink-0"><EmblemaESE logo={logo} size={38} /></div>
           <div className="min-w-0 flex-1">
@@ -1350,7 +1350,7 @@ export default function App() {
           </div>
         </div>
         <div className="hidden sm:block"><div className="max-w-3xl mx-auto px-4 flex gap-1 pb-1 flex-wrap">{todasTabs.map(t => (
-          <button key={t.id} onClick={() => irA(t.id)} className={`flex items-center gap-1.5 px-3 py-2 text-sm rounded-t-xl ${tab === t.id ? "bg-violet-50 text-violet-700 font-bold" : "text-white/80 hover:text-white"}`}><span>{t.emoji}</span> {t.label}</button>
+          <button key={t.id} onClick={() => irA(t.id)} className={`flex items-center gap-1.5 px-3 py-2 text-sm rounded-t-xl ${tab === t.id ? "bg-ese-50 text-ese-700 font-bold" : "text-white/80 hover:text-white"}`}><span>{t.emoji}</span> {t.label}</button>
         ))}</div></div>
       </header>
 
@@ -1360,26 +1360,26 @@ export default function App() {
         {tab === "eventos" && <Eventos events={events} members={members} meId={meId} onEdit={ev => setModal({ tipo: "evento", data: ev })} onDelete={borrarEvento} setEstado={setEstado} setAnfitrion={setAnfitrion} tomarAporte={tomarAporte} togglePago={togglePago} fijarFecha={fijarFecha} votarFecha={votarFecha} abrirCuentas={setCuentasEv} />}
         {tab === "cumples" && <Cumples members={members} />}
         {tab === "hitos" && <Hitos hitos={hitos} meId={meId} onAdd={addHito} onDelete={delHito} />}
-        {tab === "miembros" && <Miembros members={members} meId={meId} onEdit={m => setModal({ tipo: "miembro", data: m })} onDelete={borrarMiembro} />}
+        {tab === "miembros" && <Miembros members={members} meId={meId} esAdmin={esAdmin} onEdit={m => setModal({ tipo: "miembro", data: m })} onDelete={borrarMiembro} />}
         {tab === "ranking" && <Ranking members={members} events={events} />}
         {tab === "reglas" && <Reglamento reglas={reglas} votaciones={votaciones} members={members} meId={meId} onAddRegla={addRegla} onDelRegla={delRegla} onAddVotacion={addVotacion} onVotar={votar} />}
         {tab === "perfil" && <MiPerfil member={members.find(m => m.id === meId)} usuario={usuarioActual} esAdmin={esAdmin} onEditarDatos={() => setModal({ tipo: "miembro", data: members.find(m => m.id === meId) })} onCambiarUsuario={cambiarUsuario} onCambiarClave={cambiarClave} />}
       </main>
 
-      {(tab === "miembros" || tab === "eventos" || tab === "inicio") && (
-        <button onClick={() => setModal({ tipo: tab === "eventos" ? "evento" : "miembro", data: null })} className="fixed bottom-20 sm:bottom-6 right-4 sm:right-[calc(50%-24rem)] z-40 w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-600 to-fuchsia-500 text-white shadow-lg flex items-center justify-center hover:scale-105 transition-transform"><Plus size={26} /></button>
+      {((tab === "eventos" || tab === "inicio") || (tab === "miembros" && esAdmin)) && (
+        <button onClick={() => setModal({ tipo: tab === "miembros" ? "miembro" : "evento", data: null })} className="fixed bottom-20 sm:bottom-6 right-4 sm:right-[calc(50%-24rem)] z-40 w-14 h-14 rounded-2xl bg-gradient-to-br from-ese-600 to-oro-500 text-white shadow-lg flex items-center justify-center hover:scale-105 transition-transform"><Plus size={26} /></button>
       )}
 
       <nav className="sm:hidden fixed bottom-0 inset-x-0 bg-white border-t border-slate-100 z-40"><div className="flex">
-        {tabsPrinc.map(t => <button key={t.id} onClick={() => irA(t.id)} className={`flex-1 flex flex-col items-center gap-0.5 py-2 ${tab === t.id ? "text-violet-700" : "text-slate-400"}`}><span className="text-lg leading-none">{t.emoji}</span><span className="text-[10px] font-medium">{t.label}</span></button>)}
-        <button onClick={() => setMasOpen(true)} className={`flex-1 flex flex-col items-center gap-0.5 py-2 ${tabsMas.some(t => t.id === tab) ? "text-violet-700" : "text-slate-400"}`}><MoreHorizontal size={20} /><span className="text-[10px] font-medium">Más</span></button>
+        {tabsPrinc.map(t => <button key={t.id} onClick={() => irA(t.id)} className={`flex-1 flex flex-col items-center gap-0.5 py-2 ${tab === t.id ? "text-ese-700" : "text-slate-400"}`}><span className="text-lg leading-none">{t.emoji}</span><span className="text-[10px] font-medium">{t.label}</span></button>)}
+        <button onClick={() => setMasOpen(true)} className={`flex-1 flex flex-col items-center gap-0.5 py-2 ${tabsMas.some(t => t.id === tab) ? "text-ese-700" : "text-slate-400"}`}><MoreHorizontal size={20} /><span className="text-[10px] font-medium">Más</span></button>
       </div></nav>
 
       {masOpen && (
         <div className="sm:hidden fixed inset-0 z-50 bg-slate-900/40 flex items-end" onClick={() => setMasOpen(false)}>
           <div className="bg-white w-full rounded-t-3xl p-4" onClick={e => e.stopPropagation()}>
             <div className="w-10 h-1 bg-slate-200 rounded-full mx-auto mb-4" />
-            <div className="grid grid-cols-4 gap-3">{tabsMas.map(t => <button key={t.id} onClick={() => irA(t.id)} className="flex flex-col items-center gap-1.5 py-3 rounded-2xl bg-violet-50"><span className="text-2xl">{t.emoji}</span><span className="text-xs font-semibold text-slate-600">{t.label}</span></button>)}</div>
+            <div className="grid grid-cols-4 gap-3">{tabsMas.map(t => <button key={t.id} onClick={() => irA(t.id)} className="flex flex-col items-center gap-1.5 py-3 rounded-2xl bg-ese-50"><span className="text-2xl">{t.emoji}</span><span className="text-xs font-semibold text-slate-600">{t.label}</span></button>)}</div>
           </div>
         </div>
       )}
