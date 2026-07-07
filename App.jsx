@@ -9,6 +9,7 @@ import {
   Megaphone, Share2, Copy,
 } from "lucide-react";
 import { supabase } from "./supabaseClient";
+import { LOGO_ESE } from "./logoESE";
 
 /* ============================ Utilidades ============================ */
 
@@ -16,7 +17,7 @@ const MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "o
 const MESES_LARGO = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
 const CATEGORIAS = {
-  junta: { emoji: "🎉", label: "Junta / Fiesta", grad: "from-oro-500 to-ese-600" },
+  junta: { emoji: "🎉", label: "Junta / Fiesta", grad: "from-ese-500 to-ese-700" },
   comida: { emoji: "🍽️", label: "Comida / Cena", grad: "from-orange-400 to-rose-500" },
   deporte: { emoji: "⛳", label: "Deporte", grad: "from-emerald-400 to-teal-600" },
   viaje: { emoji: "✈️", label: "Viaje", grad: "from-cyan-400 to-blue-600" },
@@ -155,8 +156,8 @@ function comprimirImagen(file, maxLado = 900, calidad = 0.55) {
 /* Puntaje ranking */
 function puntaje(member, events) {
   const pasados = events.filter(esPasado);
-  let creados = 0, asistidos = 0, ausente = 0, pendiente = 0;
-  events.forEach(ev => { if (ev.creadoPor === member.id) creados++; });
+  let creados = 0, asistidos = 0, ausente = 0, pendiente = 0, anfitrion = 0;
+  events.forEach(ev => { if (ev.creadoPor === member.id) creados++; if (ev.anfitrion === member.id) anfitrion++; });
   pasados.forEach(ev => {
     if ((ev.asistentes || []).includes(member.id)) asistidos++;
     else if ((ev.noVan || []).includes(member.id)) ausente++;
@@ -164,7 +165,7 @@ function puntaje(member, events) {
   });
   const totalPasados = pasados.length;
   const pct = totalPasados ? Math.round(asistidos / totalPasados * 100) : 0;
-  return { creados, asistidos, ausente, pendiente, totalPasados, pct, total: creados * 20 + asistidos * 10 };
+  return { creados, asistidos, ausente, pendiente, anfitrion, totalPasados, pct, total: creados * 20 + asistidos * 10 + anfitrion * 30 };
 }
 
 /* Deudas: quién le debe a quién */
@@ -240,7 +241,7 @@ function Campo({ label, children }) {
   return <label className="block mb-3"><span className="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wide">{label}</span>{children}</label>;
 }
 const inputCls = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-ese-400 focus:border-ese-400";
-const btnPrim = "w-full bg-gradient-to-r from-ese-600 to-oro-500 text-white rounded-xl py-2.5 text-sm font-bold shadow-md";
+const btnPrim = "w-full bg-gradient-to-r from-ese-700 to-ese-500 text-white rounded-xl py-2.5 text-sm font-bold shadow-md";
 function Vacio({ emoji, texto }) {
   return <div className="bg-white rounded-3xl border-2 border-dashed border-slate-200 p-10 text-center"><p className="text-4xl mb-3">{emoji}</p><p className="text-sm text-slate-400 max-w-xs mx-auto">{texto}</p></div>;
 }
@@ -250,7 +251,6 @@ function MemberForm({ inicial, onSave, onClose }) {
   const [nombre, setNombre] = useState(inicial?.nombre || "");
   const [email, setEmail] = useState(inicial?.email || "");
   const [telefono, setTelefono] = useState(inicial?.telefono || "");
-  const [rut, setRut] = useState(inicial?.rut || "");
   const [cumple, setCumple] = useState(inicial?.cumple || "");
   const [cn, setCn] = useState(inicial?.conyuge?.nombre || "");
   const [cc, setCc] = useState(inicial?.conyuge?.cumple || "");
@@ -259,7 +259,7 @@ function MemberForm({ inicial, onSave, onClose }) {
   const setH = (id, k, v) => setHijos(hijos.map(h => h.id === id ? { ...h, [k]: v } : h));
   function guardar() {
     if (!nombre.trim()) return;
-    onSave({ id: inicial?.id || uid(), nombre: nombre.trim(), email: email.trim(), telefono: telefono.trim(), rut: rut.trim(), cumple, conyuge: cn.trim() ? { nombre: cn.trim(), cumple: cc } : null, hijos: hijos.filter(h => h.nombre.trim()) });
+    onSave({ id: inicial?.id || uid(), nombre: nombre.trim(), email: email.trim(), telefono: telefono.trim(), cumple, conyuge: cn.trim() ? { nombre: cn.trim(), cumple: cc } : null, hijos: hijos.filter(h => h.nombre.trim()) });
     onClose();
   }
   return (
@@ -269,10 +269,6 @@ function MemberForm({ inicial, onSave, onClose }) {
         <div className="flex-1"><Campo label="Email"><input className={inputCls} value={email} onChange={e => setEmail(e.target.value)} placeholder="correo@ejemplo.com" /></Campo></div>
         <div className="w-36"><Campo label="Teléfono"><input className={inputCls} value={telefono} onChange={e => setTelefono(e.target.value)} placeholder="+56 9…" /></Campo></div>
       </div>
-      <Campo label="🪪 RUT">
-        <input className={inputCls} value={rut} onChange={e => setRut(e.target.value)} placeholder="12.345.678-9" />
-        {rut.trim() && !validarRut(rut) && <span className="text-[11px] text-amber-500">RUT con dígito verificador inválido (se guardará igual)</span>}
-      </Campo>
       <Campo label="🎂 Cumpleaños"><input type="date" className={inputCls} value={cumple} onChange={e => setCumple(e.target.value)} /></Campo>
       <div className="mt-3 mb-2 flex items-center gap-2 text-slate-700"><Heart size={15} className="text-rose-500" /><span className="text-sm font-semibold">Pareja</span></div>
       <Campo label="Nombre de la pareja"><input className={inputCls} value={cn} onChange={e => setCn(e.target.value)} placeholder="Opcional" /></Campo>
@@ -290,7 +286,7 @@ function MemberForm({ inicial, onSave, onClose }) {
   );
 }
 
-function EventForm({ inicial, onSave, onClose }) {
+function EventForm({ inicial, members = [], onSave, onClose }) {
   const [titulo, setTitulo] = useState(inicial?.titulo || "");
   const [categoria, setCategoria] = useState(inicial?.categoria || "junta");
   const [votar, setVotar] = useState(inicial?.esPropuesta || false);
@@ -298,6 +294,7 @@ function EventForm({ inicial, onSave, onClose }) {
   const [hora, setHora] = useState(inicial?.hora || "");
   const [opciones, setOpciones] = useState(inicial?.opcionesFecha || [{ id: uid(), fecha: "", hora: "" }, { id: uid(), fecha: "", hora: "" }]);
   const [lugar, setLugar] = useState(inicial?.lugar || "");
+  const [anfitrion, setAnfitrion] = useState(inicial?.anfitrion || "");
   const [desc, setDesc] = useState(inicial?.desc || "");
   const [recurrente, setRecurrente] = useState(inicial?.recurrente || false);
   const [frecuencia, setFrecuencia] = useState(inicial?.frecuencia || "anual");
@@ -309,10 +306,10 @@ function EventForm({ inicial, onSave, onClose }) {
     if (votar) {
       const ops = opciones.filter(o => o.fecha).map(o => ({ ...o, votos: o.votos || [] }));
       if (ops.length < 2) return;
-      onSave({ id: inicial?.id || uid(), titulo: titulo.trim(), categoria, esPropuesta: true, opcionesFecha: ops, lugar: lugar.trim(), desc: desc.trim(), cuota: cuota ? Number(cuota) : 0, aportes: aportes.filter(a => a.item.trim()), asistentes: [], noVan: [], pagos: [], gastos: inicial?.gastos || [], creadoPor: inicial?.creadoPor, anfitrion: inicial?.anfitrion || null });
+      onSave({ id: inicial?.id || uid(), titulo: titulo.trim(), categoria, esPropuesta: true, opcionesFecha: ops, lugar: lugar.trim(), desc: desc.trim(), cuota: cuota ? Number(cuota) : 0, aportes: aportes.filter(a => a.item.trim()), asistentes: [], noVan: [], pagos: [], gastos: inicial?.gastos || [], creadoPor: inicial?.creadoPor, anfitrion: anfitrion || null });
     } else {
       if (!fecha) return;
-      onSave({ id: inicial?.id || uid(), titulo: titulo.trim(), categoria, fecha, hora, lugar: lugar.trim(), desc: desc.trim(), recurrente, frecuencia, cuota: cuota ? Number(cuota) : 0, aportes: aportes.filter(a => a.item.trim()), asistentes: inicial?.asistentes || [], noVan: inicial?.noVan || [], pagos: inicial?.pagos || [], gastos: inicial?.gastos || [], creadoPor: inicial?.creadoPor, anfitrion: inicial?.anfitrion || null });
+      onSave({ id: inicial?.id || uid(), titulo: titulo.trim(), categoria, fecha, hora, lugar: lugar.trim(), desc: desc.trim(), recurrente, frecuencia, cuota: cuota ? Number(cuota) : 0, aportes: aportes.filter(a => a.item.trim()), asistentes: inicial?.asistentes || [], noVan: inicial?.noVan || [], pagos: inicial?.pagos || [], gastos: inicial?.gastos || [], creadoPor: inicial?.creadoPor, anfitrion: anfitrion || null });
     }
     onClose();
   }
@@ -347,6 +344,12 @@ function EventForm({ inicial, onSave, onClose }) {
         </div>
       )}
       <Campo label="Lugar"><input className={inputCls} value={lugar} onChange={e => setLugar(e.target.value)} placeholder="Ej: Casa de Gonzalo" /></Campo>
+      <Campo label="🏠 ¿Quién presta el local? (suma +30 pts)">
+        <select className={inputCls} value={anfitrion} onChange={e => setAnfitrion(e.target.value)}>
+          <option value="">Nadie / por definir</option>
+          {members.map(m => <option key={m.id} value={m.id}>{m.nombre}</option>)}
+        </select>
+      </Campo>
       <Campo label="Descripción"><textarea className={inputCls} rows={2} value={desc} onChange={e => setDesc(e.target.value)} /></Campo>
       {!votar && (
         <div className="flex items-center gap-3 mb-3">
@@ -489,13 +492,13 @@ function Inicio({ members, events, meId, ahora, setTab, setEstado, setAnfitrion 
   return (
     <div className="space-y-6">
       {siguiente ? <HeroEvento ev={siguiente} ahora={ahora} meId={meId} members={members} setEstado={setEstado} setAnfitrion={setAnfitrion} /> :
-        <div className="rounded-3xl p-8 text-center bg-gradient-to-br from-ese-500 to-oro-500 text-white"><p className="text-4xl mb-2">🎈</p><p className="font-bold text-lg">Aún no hay juntas agendadas</p><button onClick={() => setTab("eventos")} className="mt-3 bg-white text-ese-700 font-bold text-sm px-4 py-2 rounded-full">Crear evento</button></div>}
+        <div className="rounded-3xl p-8 text-center bg-gradient-to-br from-ese-600 to-ese-400 text-white"><p className="text-4xl mb-2">🎈</p><p className="font-bold text-lg">Aún no hay juntas agendadas</p><button onClick={() => setTab("eventos")} className="mt-3 bg-white text-ese-700 font-bold text-sm px-4 py-2 rounded-full">Crear evento</button></div>}
 
       {miAsist && miAsist.totalPasados > 0 && (
         <div className="bg-white rounded-2xl border border-slate-100 p-4">
           <p className="text-sm font-bold text-slate-700 mb-1">📊 Mi asistencia</p>
           <div className="flex justify-between text-xs text-slate-400 mb-1"><span>{miAsist.asistidos} de {miAsist.totalPasados} juntas</span><span className="font-bold text-ese-600">{miAsist.pct}%</span></div>
-          <div className="h-2 bg-slate-100 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-ese-500 to-oro-500" style={{ width: `${miAsist.pct}%` }} /></div>
+          <div className="h-2 bg-slate-100 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-ese-600 to-ese-400" style={{ width: `${miAsist.pct}%` }} /></div>
         </div>
       )}
 
@@ -557,7 +560,7 @@ function Muro({ posts, members, meId, onPost, onLike, onComentar, onBorrar }) {
             <button onClick={() => setCategoria(categoria === "comunicado" ? "general" : "comunicado")} className={`text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1 ${categoria === "comunicado" ? "bg-[#0a2540] text-white" : "bg-slate-100 text-slate-500"}`}><Megaphone size={13} /> Comunicado ESE</button>
             <button onClick={() => fileRef.current?.click()} className="text-sm text-ese-600 font-semibold flex items-center gap-1.5"><Camera size={16} /> {subiendo ? "…" : "Foto"}</button>
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={elegirFoto} />
-            <button onClick={publicar} className="ml-auto bg-gradient-to-r from-ese-600 to-oro-500 text-white rounded-full px-4 py-1.5 text-sm font-bold flex items-center gap-1.5"><Send size={14} /> Publicar</button>
+            <button onClick={publicar} className="ml-auto bg-gradient-to-r from-ese-700 to-ese-500 text-white rounded-full px-4 py-1.5 text-sm font-bold flex items-center gap-1.5"><Send size={14} /> Publicar</button>
           </div>
         </div>
       ) : <div className="bg-amber-100 border border-amber-200 rounded-2xl px-4 py-2.5 text-xs text-amber-800">Inicia sesión para publicar en el muro.</div>}
@@ -720,7 +723,7 @@ function TarjetaEvento({ ev, members, meId, nombreDe, onEdit, onDelete, setEstad
 }
 function BarraAsistGris({ confirmados, total }) {
   const pct = total ? Math.round(confirmados / total * 100) : 0;
-  return <div><div className="flex justify-between text-[11px] text-slate-400 mb-1"><span>👥 {confirmados} de {total} confirmaron</span><span>{pct}%</span></div><div className="h-1.5 bg-slate-100 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-ese-500 to-oro-500 rounded-full" style={{ width: `${pct}%` }} /></div></div>;
+  return <div><div className="flex justify-between text-[11px] text-slate-400 mb-1"><span>👥 {confirmados} de {total} confirmaron</span><span>{pct}%</span></div><div className="h-1.5 bg-slate-100 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-ese-600 to-ese-400 rounded-full" style={{ width: `${pct}%` }} /></div></div>;
 }
 
 /* ============================ Hitos ============================ */
@@ -744,7 +747,7 @@ function Hitos({ hitos, meId, onAdd, onDelete }) {
       )}
       {orden.length === 0 ? <Vacio emoji="🎯" texto="Aún no hay hitos. Agrega las fechas grandes: Fiestas Patrias, matrimonios, viajes…" /> :
         <div className="grid sm:grid-cols-2 gap-3">{orden.map(h => { const dias = diasHasta(h.occ); return (
-          <div key={h.id} className="bg-gradient-to-br from-ese-600 to-oro-500 rounded-3xl p-4 text-white relative overflow-hidden">
+          <div key={h.id} className="bg-gradient-to-br from-ese-700 to-ese-500 rounded-3xl p-4 text-white relative overflow-hidden">
             <div className="absolute -right-3 -top-3 text-7xl opacity-20">{h.emoji}</div>
             <div className="flex justify-between items-start"><div><p className="text-3xl">{h.emoji}</p><p className="font-extrabold text-lg mt-1">{h.nombre}</p></div>
               <div className="text-right"><p className="text-3xl font-extrabold leading-none">{dias >= 0 ? dias : "—"}</p><p className="text-[10px] uppercase text-white/70">{dias >= 0 ? "días" : "pasó"}</p></div></div>
@@ -758,7 +761,7 @@ function Hitos({ hitos, meId, onAdd, onDelete }) {
 }
 
 /* ============================ Cumpleaños con filtros ============================ */
-function Cumples({ members }) {
+function Cumples({ members, onAgregar }) {
   const [filtro, setFiltro] = useState("todos");
   const cumples = useMemo(() => {
     const arr = [];
@@ -771,15 +774,17 @@ function Cumples({ members }) {
   }, [members]);
   const tabs = [["todos", "Todos", cumples.length], ["socios", "Socios", cumples.filter(c => c.tipo === "socios").length], ["parejas", "Parejas", cumples.filter(c => c.tipo === "parejas").length], ["hijos", "Hijos", cumples.filter(c => c.tipo === "hijos").length]];
   const lista = filtro === "todos" ? cumples : cumples.filter(c => c.tipo === filtro);
-  if (cumples.length === 0) return <Vacio emoji="🎂" texto="Agrega miembros con sus fechas para armar el calendario." />;
+  const botonAgregar = <button onClick={onAgregar} className="w-full mb-3 bg-white rounded-2xl border-2 border-dashed border-ese-200 text-ese-700 font-semibold py-3 flex items-center justify-center gap-2"><Plus size={18} /> Agregar mi cumpleaños y el de mi familia</button>;
+  if (cumples.length === 0) return <div>{botonAgregar}<Vacio emoji="🎂" texto="Aún no hay cumpleaños. Agrega el tuyo y el de tu pareja e hijos con el botón de arriba." /></div>;
   return (
     <div>
+      {botonAgregar}
       <div className="flex gap-2 mb-3 overflow-x-auto pb-1">{tabs.map(([k, l, n]) => (
         <button key={k} onClick={() => setFiltro(k)} className={`text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap ${filtro === k ? "bg-ese-600 text-white" : "bg-white border border-slate-200 text-slate-500"}`}>{l} {n}</button>
       ))}</div>
       <div className="space-y-2">{lista.map((c, i) => (
         <div key={i} className="bg-white rounded-2xl border border-slate-100 p-3 flex items-center gap-3">
-          <div className="w-11 text-center shrink-0 bg-oro-50 rounded-xl py-1"><p className="text-[10px] text-oro-500 uppercase font-bold">{MESES[c.m - 1]}</p><p className="font-extrabold text-lg text-oro-700 leading-none">{c.d}</p></div>
+          <div className="w-11 text-center shrink-0 bg-oro-50 rounded-xl py-1"><p className="text-[10px] text-oro-600 uppercase font-bold">{MESES[c.m - 1]}</p><p className="font-extrabold text-lg text-oro-700 leading-none">{c.d}</p></div>
           <div className="text-xl">{c.emoji}</div>
           <div className="min-w-0 flex-1"><p className="text-sm font-semibold text-slate-800 truncate">{c.nombre}</p><p className="text-xs text-slate-400">{c.rel}{c.edad ? ` · cumple ${c.edad}` : ""}</p></div>
           <p className={`text-xs font-bold ${c.dias <= 7 ? "text-oro-600" : "text-slate-400"}`}>{etiquetaDias(c.dias)}</p>
@@ -800,7 +805,7 @@ function Miembros({ members, meId, esAdmin, onEdit, onDelete }) {
           <div className="min-w-0 flex-1"><p className="text-sm font-bold text-slate-800 flex items-center gap-1.5 truncate">{m.nombre}{m.id === meId && <span className="text-[10px] bg-ese-100 text-ese-700 px-1.5 py-0.5 rounded-full">Tú</span>}</p>{m.email && <p className="text-xs text-slate-400 truncate">{m.email}</p>}{m.telefono && <p className="text-xs text-slate-400">{m.telefono}</p>}</div>
           {esAdmin && <div className="flex gap-1"><button onClick={() => onEdit(m)} className="text-slate-300 hover:text-ese-600 p-1"><Pencil size={15} /></button><button onClick={() => onDelete(m.id)} className="text-slate-300 hover:text-rose-500 p-1"><Trash2 size={15} /></button></div>}
         </div>
-        <div className="mt-3 space-y-1 text-xs text-slate-500">{m.rut && <p>🪪 {formatearRut(m.rut)}</p>}{m.cumple && <p>🎂 {parseFecha(m.cumple).d} {MESES[parseFecha(m.cumple).m - 1]}</p>}{m.conyuge && <p>💗 {m.conyuge.nombre}</p>}{(m.hijos || []).length > 0 && <p>🧒 {m.hijos.map(h => h.nombre).join(", ")}</p>}</div>
+        <div className="mt-3 space-y-1 text-xs text-slate-500">{m.cumple && <p>🎂 {parseFecha(m.cumple).d} {MESES[parseFecha(m.cumple).m - 1]}</p>}{m.conyuge && <p>💗 {m.conyuge.nombre}</p>}{(m.hijos || []).length > 0 && <p>🧒 {m.hijos.map(h => h.nombre).join(", ")}</p>}</div>
       </div>
     ))}</div>
   );
@@ -813,14 +818,14 @@ function Ranking({ members, events }) {
   const medalla = ["🥇", "🥈", "🥉"];
   return (
     <div>
-      <div className="bg-gradient-to-br from-ese-600 to-oro-500 rounded-3xl p-4 mb-4 text-white"><p className="font-bold flex items-center gap-1.5"><Trophy size={16} /> Ranking de participación</p><p className="text-xs text-white/85 mt-1">Sube quien mueve la promo: <b>+20 pts</b> por crear un evento y <b>+10 pts</b> por asistir. Se muestra también tu % de asistencia. 🎯</p></div>
+      <div className="bg-gradient-to-br from-ese-700 to-ese-500 rounded-3xl p-4 mb-4 text-white"><p className="font-bold flex items-center gap-1.5"><Trophy size={16} /> Ranking de participación</p><p className="text-xs text-white/85 mt-1">Sube quien mueve la promo: <b>+30 pts</b> por prestar el local, <b>+20 pts</b> por crear un evento y <b>+10 pts</b> por asistir. Se muestra también tu % de asistencia. 🎯</p></div>
       <div className="space-y-2">{filas.map((m, i) => (
         <div key={m.id} className={`bg-white rounded-2xl border p-3 ${i === 0 ? "border-amber-300 shadow-sm" : "border-slate-100"}`}>
           <div className="flex items-center gap-3">
             <div className="w-8 text-center text-lg">{i < 3 ? medalla[i] : <span className="text-sm font-bold text-slate-400">{i + 1}</span>}</div>
             <Avatar nombre={m.nombre} size={40} />
-            <div className="min-w-0 flex-1"><p className="text-sm font-bold text-slate-800 truncate">{m.nombre}</p><p className="text-[11px] text-slate-400">🎪 {m.creados} creados · ✅ {m.asistidos} · ❌ {m.ausente} · ⏳ {m.pendiente}</p></div>
-            <div className="text-right"><p className="font-extrabold text-lg bg-gradient-to-r from-ese-600 to-oro-500 bg-clip-text text-transparent leading-none">{m.total}</p><p className="text-[10px] text-slate-400 uppercase">pts</p></div>
+            <div className="min-w-0 flex-1"><p className="text-sm font-bold text-slate-800 truncate">{m.nombre}</p><p className="text-[11px] text-slate-400">🏠 {m.anfitrion} · 🎪 {m.creados} · ✅ {m.asistidos} · ❌ {m.ausente} · ⏳ {m.pendiente}</p></div>
+            <div className="text-right"><p className="font-extrabold text-lg bg-gradient-to-r from-ese-600 to-ese-400 bg-clip-text text-transparent leading-none">{m.total}</p><p className="text-[10px] text-slate-400 uppercase">pts</p></div>
           </div>
           {m.totalPasados > 0 && <div className="mt-2 pl-11"><div className="flex justify-between text-[11px] text-slate-400 mb-0.5"><span>Asistencia</span><span className="font-bold text-amber-500">{m.pct}%</span></div><div className="h-1.5 bg-slate-100 rounded-full overflow-hidden"><div className="h-full bg-amber-400 rounded-full" style={{ width: `${m.pct}%` }} /></div></div>}
         </div>
@@ -833,7 +838,10 @@ function Ranking({ members, events }) {
 function Reglamento({ reglas, votaciones, members, meId, onAddRegla, onDelRegla, onAddVotacion, onVotar }) {
   const [nuevaRegla, setNuevaRegla] = useState("");
   const [vt, setVt] = useState(""); const [vd, setVd] = useState(""); const [formV, setFormV] = useState(false);
+  const [vcierra, setVcierra] = useState(() => { const d = new Date(Date.now() + 7 * 86400000); const p = n => String(n).padStart(2, "0"); return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`; });
   const nombreDe = id => members.find(m => m.id === id)?.nombre?.split(" ")[0] || "?";
+  const linkVotacion = id => `${window.location.origin}${window.location.pathname}#votacion=${id}`;
+  const compartirWhatsApp = (v) => { const url = `https://wa.me/?text=${encodeURIComponent("🗳️ Vota en la promo: “" + v.titulo + "”\n" + linkVotacion(v.id))}`; window.open(url, "_blank"); };
   return (
     <div className="space-y-6">
       <section>
@@ -853,12 +861,13 @@ function Reglamento({ reglas, votaciones, members, meId, onAddRegla, onDelRegla,
 
       <section>
         <div className="flex items-center justify-between mb-2"><h3 className="font-bold text-slate-700 flex items-center gap-1.5"><Vote size={16} /> Votaciones</h3><button onClick={() => setFormV(!formV)} className="text-xs text-ese-600 font-semibold flex items-center gap-1"><Plus size={13} /> Nueva</button></div>
-        <p className="text-[11px] text-slate-400 mb-2">Las reglas se aprueban con 2/3 de los votos emitidos en 1 semana.</p>
+        <p className="text-[11px] text-slate-400 mb-2">Las reglas se aprueban con 2/3 de los votos emitidos antes del cierre.</p>
         {formV && meId && (
           <div className="bg-white rounded-2xl border border-slate-100 p-4 mb-3">
             <Campo label="¿Qué se vota?"><input className={inputCls} value={vt} onChange={e => setVt(e.target.value)} placeholder="Ej: Subir la cuota a $15.000" /></Campo>
             <Campo label="Detalle"><textarea className={inputCls} rows={2} value={vd} onChange={e => setVd(e.target.value)} /></Campo>
-            <button onClick={() => { if (vt.trim()) { onAddVotacion(vt.trim(), vd.trim()); setVt(""); setVd(""); setFormV(false); } }} className={btnPrim}>Abrir votación (1 semana)</button>
+            <Campo label="🗓️ Cierra el"><input type="datetime-local" className={inputCls} value={vcierra} onChange={e => setVcierra(e.target.value)} /></Campo>
+            <button onClick={() => { if (vt.trim() && vcierra) { onAddVotacion(vt.trim(), vd.trim(), new Date(vcierra).toISOString()); setVt(""); setVd(""); setFormV(false); } }} className={btnPrim}>Abrir votación 🗳️</button>
           </div>
         )}
         <div className="space-y-3">{votaciones.length === 0 ? <p className="text-sm text-slate-400 bg-white rounded-2xl border border-slate-100 p-4">No hay votaciones abiertas.</p> :
@@ -878,6 +887,7 @@ function Reglamento({ reglas, votaciones, members, meId, onAddRegla, onDelRegla,
                     <button onClick={() => onVotar(v.id, "no")} className={`flex-1 text-sm font-bold py-2 rounded-xl flex items-center justify-center gap-1.5 ${miNo ? "bg-rose-500 text-white" : "bg-rose-50 text-rose-600"}`}><ThumbsDown size={14} /> En contra</button>
                   </div>
                 )}
+                <button onClick={() => compartirWhatsApp(v)} className="mt-3 w-full text-xs font-semibold text-emerald-700 bg-emerald-50 rounded-xl py-2 flex items-center justify-center gap-1.5"><Share2 size={13} /> Compartir por WhatsApp</button>
               </div>
             );
           })}</div>
@@ -892,6 +902,7 @@ function Auth({ nombrePromo, logo, onRegister, onLogin, onRecuperar }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nombre, setNombre] = useState("");
+  const [cumple, setCumple] = useState("");
   const [ver, setVer] = useState(false);
   const [error, setError] = useState("");
   const [ok, setOk] = useState("");
@@ -909,7 +920,8 @@ function Auth({ nombrePromo, logo, onRegister, onLogin, onRecuperar }) {
       if (!email.trim() || !password) { setError("Completa correo y contraseña."); return; }
       if (modo === "registro") {
         if (!nombre.trim()) { setError("Escribe tu nombre."); return; }
-        const err = await onRegister({ email: email.trim(), password, nombre: nombre.trim() });
+        if (!cumple) { setError("Agrega tu fecha de cumpleaños."); return; }
+        const err = await onRegister({ email: email.trim(), password, nombre: nombre.trim(), cumple });
         if (err) { if (/confirmar tu cuenta/.test(err)) { setOk(err); } else setError(err); }
       } else {
         const err = await onLogin({ email: email.trim(), password });
@@ -920,7 +932,7 @@ function Auth({ nombrePromo, logo, onRegister, onLogin, onRecuperar }) {
 
   const titulo = modo === "registro" ? "Crea tu cuenta" : modo === "recuperar" ? "Recuperar acceso" : "Inicia sesión";
   return (
-    <div className="min-h-screen bg-gradient-to-br from-ese-600 to-oro-500 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-ese-700 to-ese-500 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm p-6">
         <div className="text-center mb-5">
           <div className="flex justify-center mb-2"><EmblemaESE logo={logo} size={60} /></div>
@@ -929,6 +941,7 @@ function Auth({ nombrePromo, logo, onRegister, onLogin, onRecuperar }) {
         </div>
 
         {modo === "registro" && <Campo label="Tu nombre"><input className={inputCls} value={nombre} onChange={e => setNombre(e.target.value)} placeholder="Ej: Gonzalo Grez" /></Campo>}
+        {modo === "registro" && <Campo label="🎂 Tu cumpleaños"><input type="date" className={inputCls} value={cumple} onChange={e => setCumple(e.target.value)} /></Campo>}
         <Campo label="Correo"><input className={inputCls} value={email} onChange={e => setEmail(e.target.value)} placeholder="correo@ejemplo.com" autoCapitalize="none" /></Campo>
         {modo !== "recuperar" && (
           <Campo label="Contraseña">
@@ -964,7 +977,7 @@ function NuevaClaveScreen({ nombrePromo, logo, onGuardar }) {
     const err = await onGuardar(p1); if (err) setMsg(err);
   }
   return (
-    <div className="min-h-screen bg-gradient-to-br from-ese-600 to-oro-500 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-ese-700 to-ese-500 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm p-6">
         <div className="text-center mb-5"><div className="flex justify-center mb-2"><EmblemaESE logo={logo} size={60} /></div><h1 className="font-extrabold text-xl text-slate-800">{nombrePromo}</h1><p className="text-sm text-slate-400">Define tu nueva clave</p></div>
         <Campo label="Nueva contraseña"><input type="password" className={inputCls} value={p1} onChange={e => setP1(e.target.value)} placeholder="••••••" /></Campo>
@@ -1062,20 +1075,20 @@ function MiPerfil({ member, usuario, esAdmin, onEditarDatos, onCambiarUsuario, o
   }
   return (
     <div className="space-y-4">
-      <div className="bg-gradient-to-br from-ese-600 to-oro-500 rounded-3xl p-5 text-white flex items-center gap-3">
+      <div className="bg-gradient-to-br from-ese-700 to-ese-500 rounded-3xl p-5 text-white flex items-center gap-3">
         <Avatar nombre={member?.nombre} size={54} />
         <div><p className="font-extrabold text-lg">{member?.nombre}</p><p className="text-sm text-white/80">@{usuario.username}{esAdmin ? " · admin" : ""}</p></div>
       </div>
       <div className="bg-white rounded-2xl border border-slate-100 p-4">
-        <div className="flex items-center justify-between mb-2"><p className="font-bold text-slate-700">Datos personales</p><button onClick={onEditarDatos} className="text-xs text-ese-600 font-semibold flex items-center gap-1"><Pencil size={13} /> Editar</button></div>
+        <div className="flex items-center justify-between mb-2"><p className="font-bold text-slate-700">Datos personales</p><button onClick={onEditarDatos} className="text-xs bg-ese-600 text-white font-semibold flex items-center gap-1 px-3 py-1.5 rounded-full"><Pencil size={13} /> Editar / agregar</button></div>
         <div className="space-y-1 text-sm text-slate-600">
-          {member?.rut && <p>🪪 {formatearRut(member.rut)}</p>}
-          {member?.email ? <p>✉️ {member.email}</p> : <p className="text-amber-500">✉️ Sin email — agrégalo para poder recuperar tu clave</p>}
+          {member?.email ? <p>✉️ {member.email}</p> : <p className="text-amber-500">✉️ Sin correo</p>}
           {member?.telefono && <p>📱 {member.telefono}</p>}
-          {member?.cumple && <p>🎂 {parseFecha(member.cumple).d} {MESES[parseFecha(member.cumple).m - 1]}</p>}
-          {member?.conyuge && <p>💗 {member.conyuge.nombre}</p>}
-          {(member?.hijos || []).length > 0 && <p>🧒 {member.hijos.map(h => h.nombre).join(", ")}</p>}
+          {member?.cumple ? <p>🎂 Tu cumpleaños: {parseFecha(member.cumple).d} {MESES[parseFecha(member.cumple).m - 1]}</p> : <p className="text-amber-500">🎂 Agrega tu cumpleaños</p>}
+          {member?.conyuge && <p>💗 {member.conyuge.nombre}{member.conyuge.cumple ? ` · 🎂 ${parseFecha(member.conyuge.cumple).d} ${MESES[parseFecha(member.conyuge.cumple).m - 1]}` : ""}</p>}
+          {(member?.hijos || []).map((h, i) => <p key={i}>🧒 {h.nombre}{h.cumple ? ` · 🎂 ${parseFecha(h.cumple).d} ${MESES[parseFecha(h.cumple).m - 1]}` : ""}</p>)}
         </div>
+        <p className="text-[11px] text-slate-400 mt-2">Aquí agregas tu cumpleaños y el de tu pareja e hijos. Se muestran en la pestaña 🎂 Cumpleaños.</p>
       </div>
       <div className="bg-white rounded-2xl border border-slate-100 p-4">
         <p className="font-bold text-slate-700 mb-2">Correo de acceso</p>
@@ -1142,7 +1155,7 @@ export default function App() {
   const [respaldoOpen, setRespaldoOpen] = useState(false);
   const [invitarOpen, setInvitarOpen] = useState(false);
   const [enlace, setEnlace] = useState("");
-  const [logo, setLogo] = useState(null);
+  const [logo, setLogo] = useState(LOGO_ESE);
   const [nombrePromo, setNombrePromo] = useState("Promoción MBA 2024 ESE");
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState("inicio");
@@ -1170,6 +1183,7 @@ export default function App() {
     });
     return () => sub.subscription.unsubscribe();
   }, []);
+  useEffect(() => { if (typeof window !== "undefined" && window.location.hash.includes("votacion=")) setTab("reglas"); }, []);
   useEffect(() => { const t = setInterval(() => setAhora(new Date()), 60000); return () => clearInterval(t); }, []);
   useEffect(() => {
     const t = setInterval(() => cargarTodo(), 30000);
@@ -1198,7 +1212,7 @@ export default function App() {
     if (re.data) setReglas(re.data.map(r => ({ id: r.id, texto: r.texto })));
     if (vo.data) setVotaciones(vo.data.map(r => ({ id: r.id, titulo: r.titulo, desc: r.descripcion || "", creadoPor: r.creado_por || null, creada: r.creado ? new Date(r.creado).getTime() : Date.now(), cierra: r.cierra, votosSi: r.votos_si || [], votosNo: r.votos_no || [] })));
     if (perf.data) setUsuarios(perf.data.map(p => { const mem = membersArr.find(m => m.id === p.miembro_id); return { id: p.id, username: mem?.email || "", esAdmin: !!p.es_admin, memberId: p.miembro_id }; }));
-    if (conf && conf.data) { setNombrePromo(conf.data.nombre_promo || "Promoción MBA 2024 ESE"); setEnlace(conf.data.enlace || ""); setLogo(conf.data.logo || null); }
+    if (conf && conf.data) { setNombrePromo(conf.data.nombre_promo || "Promoción MBA 2024 ESE"); setEnlace(conf.data.enlace || ""); setLogo(conf.data.logo || LOGO_ESE); }
   }
 
   async function asegurarPerfil() {
@@ -1210,7 +1224,8 @@ export default function App() {
       const { data: u } = await supabase.auth.getUser();
       const email = u.user?.email || "";
       const nombre = u.user?.user_metadata?.nombre || email.split("@")[0] || "Nuevo";
-      const { data: mrow, error: em } = await supabase.from("miembros").insert({ nombre, email }).select().single();
+      const cumple = u.user?.user_metadata?.cumple || null;
+      const { data: mrow, error: em } = await supabase.from("miembros").insert({ nombre, email, cumple }).select().single();
       if (em || !mrow) { await cargarTodo(); return; }
       const { count } = await supabase.from("perfiles").select("*", { count: "exact", head: true });
       const { error: ep } = await supabase.from("perfiles").insert({ id: sesionUserId, miembro_id: mrow.id, es_admin: (count || 0) === 0 });
@@ -1221,8 +1236,8 @@ export default function App() {
 
   async function logout() { await supabase.auth.signOut(); setSesionUserId(null); }
   function traducirAuth(msg) { if (/registered|already/i.test(msg)) return "Ese correo ya tiene cuenta. Inicia sesión."; if (/password/i.test(msg)) return "La contraseña debe tener al menos 6 caracteres."; if (/email/i.test(msg)) return "Revisa que el correo esté bien escrito."; return "No se pudo completar. Intenta de nuevo."; }
-  async function registrar({ email, password, nombre }) {
-    const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { nombre } } });
+  async function registrar({ email, password, nombre, cumple }) {
+    const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { nombre, cumple: cumple || null } } });
     if (error) return traducirAuth(error.message);
     if (!data.session) return "Te enviamos un correo para confirmar tu cuenta. Confírmalo y luego inicia sesión.";
     await asegurarPerfil();
@@ -1319,7 +1334,7 @@ export default function App() {
   // Reglas / votaciones
   async function addRegla(t) { await supabase.from("reglas").insert({ texto: t }); await cargarTodo(); }
   async function delRegla(id) { await supabase.from("reglas").delete().eq("id", id); await cargarTodo(); }
-  async function addVotacion(titulo, desc) { await supabase.from("votaciones").insert({ titulo, descripcion: desc || null, creado_por: meId, cierra: new Date(Date.now() + 7 * 86400000).toISOString(), votos_si: [], votos_no: [] }); await cargarTodo(); }
+  async function addVotacion(titulo, desc, cierra) { await supabase.from("votaciones").insert({ titulo, descripcion: desc || null, creado_por: meId, cierra: cierra || new Date(Date.now() + 7 * 86400000).toISOString(), votos_si: [], votos_no: [] }); await cargarTodo(); }
   async function votar(id, op) { const v = votaciones.find(x => x.id === id); if (!v) return; let si = (v.votosSi || []).filter(x => x !== meId), no = (v.votosNo || []).filter(x => x !== meId); if (op === "si") si.push(meId); else no.push(meId); await supabase.from("votaciones").update({ votos_si: si, votos_no: no }).eq("id", id); await cargarTodo(); }
 
   const tabsPrinc = [{ id: "inicio", label: "Inicio", emoji: "🏠" }, { id: "muro", label: "Muro", emoji: "📸" }, { id: "eventos", label: "Eventos", emoji: "📅" }, { id: "cumples", label: "Cumples", emoji: "🎂" }];
@@ -1334,7 +1349,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-ese-50 font-sans text-slate-800 pb-24 sm:pb-6">
-      <header className="bg-gradient-to-r from-ese-600 to-oro-500 sticky top-0 z-40 shadow-md">
+      <header className="bg-gradient-to-r from-ese-700 to-ese-500 sticky top-0 z-40 shadow-md">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
           <div className="shrink-0"><EmblemaESE logo={logo} size={38} /></div>
           <div className="min-w-0 flex-1">
@@ -1358,7 +1373,7 @@ export default function App() {
         {tab === "inicio" && <Inicio members={members} events={events} meId={meId} ahora={ahora} setTab={irA} setEstado={setEstado} setAnfitrion={setAnfitrion} />}
         {tab === "muro" && <Muro posts={posts} members={members} meId={meId} onPost={addPost} onLike={likePost} onComentar={comentar} onBorrar={borrarPost} />}
         {tab === "eventos" && <Eventos events={events} members={members} meId={meId} onEdit={ev => setModal({ tipo: "evento", data: ev })} onDelete={borrarEvento} setEstado={setEstado} setAnfitrion={setAnfitrion} tomarAporte={tomarAporte} togglePago={togglePago} fijarFecha={fijarFecha} votarFecha={votarFecha} abrirCuentas={setCuentasEv} />}
-        {tab === "cumples" && <Cumples members={members} />}
+        {tab === "cumples" && <Cumples members={members} onAgregar={() => setModal({ tipo: "miembro", data: members.find(m => m.id === meId) })} />}
         {tab === "hitos" && <Hitos hitos={hitos} meId={meId} onAdd={addHito} onDelete={delHito} />}
         {tab === "miembros" && <Miembros members={members} meId={meId} esAdmin={esAdmin} onEdit={m => setModal({ tipo: "miembro", data: m })} onDelete={borrarMiembro} />}
         {tab === "ranking" && <Ranking members={members} events={events} />}
@@ -1367,7 +1382,7 @@ export default function App() {
       </main>
 
       {((tab === "eventos" || tab === "inicio") || (tab === "miembros" && esAdmin)) && (
-        <button onClick={() => setModal({ tipo: tab === "miembros" ? "miembro" : "evento", data: null })} className="fixed bottom-20 sm:bottom-6 right-4 sm:right-[calc(50%-24rem)] z-40 w-14 h-14 rounded-2xl bg-gradient-to-br from-ese-600 to-oro-500 text-white shadow-lg flex items-center justify-center hover:scale-105 transition-transform"><Plus size={26} /></button>
+        <button onClick={() => setModal({ tipo: tab === "miembros" ? "miembro" : "evento", data: null })} className="fixed bottom-20 sm:bottom-6 right-4 sm:right-[calc(50%-24rem)] z-40 w-14 h-14 rounded-2xl bg-gradient-to-br from-ese-700 to-ese-500 text-white shadow-lg flex items-center justify-center hover:scale-105 transition-transform"><Plus size={26} /></button>
       )}
 
       <nav className="sm:hidden fixed bottom-0 inset-x-0 bg-white border-t border-slate-100 z-40"><div className="flex">
@@ -1385,7 +1400,7 @@ export default function App() {
       )}
 
       {modal?.tipo === "miembro" && <Modal titulo={modal.data ? "Editar miembro" : "Nuevo miembro 👤"} onClose={() => setModal(null)}><MemberForm inicial={modal.data} onSave={guardarMiembro} onClose={() => setModal(null)} /></Modal>}
-      {modal?.tipo === "evento" && <Modal titulo={modal.data ? "Editar evento" : "Nuevo evento 🎉"} onClose={() => setModal(null)}><EventForm inicial={modal.data} onSave={guardarEvento} onClose={() => setModal(null)} /></Modal>}
+      {modal?.tipo === "evento" && <Modal titulo={modal.data ? "Editar evento" : "Nuevo evento 🎉"} onClose={() => setModal(null)}><EventForm inicial={modal.data} members={members} onSave={guardarEvento} onClose={() => setModal(null)} /></Modal>}
       {cuentasEv && <CuentasModal ev={events.find(e => e.id === cuentasEv.id) || cuentasEv} members={members} meId={meId} onClose={() => setCuentasEv(null)} onSave={guardarCuentas} />}
       {respaldoOpen && esAdmin && <AdminPanel datos={{ members, events, hitos, posts, reglas, votaciones, usuarios, nombrePromo, enlace, logo }} usuarios={usuarios} members={members} meUserId={sesionUserId} onClose={() => setRespaldoOpen(false)} onImportar={importarRespaldo} onEliminarUsuario={eliminarUsuario} onResetClave={resetearClave} onToggleAdmin={toggleAdminUser} />}
       {invitarOpen && <InvitarModal nombrePromo={nombrePromo} logo={logo} enlace={enlace} esAdmin={esAdmin} onClose={() => setInvitarOpen(false)} onGuardarEnlace={guardarEnlace} onSubirLogo={subirLogo} />}
